@@ -7,15 +7,19 @@ from app.agent.prompts import (
     INTENT_SYSTEM,
     RECOMMENDATION_SYSTEM,
     REVIEW_SYSTEM,
+    SELLER_PRODUCT_SYSTEM,
     build_intent_prompt,
     build_recommendation_prompt,
     build_review_prompt,
+    build_seller_product_prompt,
     intent_json_schema_hint,
     review_json_schema_hint,
+    seller_product_json_schema_hint,
 )
 from app.agent.state import (
     RecommendationContext,
     ReviewAnalysis,
+    SellerProductDraft,
     ShoppingIntent,
     ShoppingProfile,
 )
@@ -54,7 +58,7 @@ class OpenAICompatibleProvider:
     ) -> ShoppingIntent:
         schema = json.dumps(intent_json_schema_hint(), ensure_ascii=False)
         messages = [
-            {"role": "system", "content": INTENT_SYSTEM},           
+            {"role": "system", "content": INTENT_SYSTEM},
             {
                 "role": "user",
                 "content": (
@@ -73,7 +77,7 @@ class OpenAICompatibleProvider:
                 extra_body=self.extra_body,
             )
         except Exception:
-                                                                         
+
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
@@ -123,7 +127,7 @@ class OpenAICompatibleProvider:
                 extra_body=self.extra_body,
             )
         except Exception:
-                                                                         
+
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
@@ -134,6 +138,49 @@ class OpenAICompatibleProvider:
 
         text = response.choices[0].message.content or ""
         return ReviewAnalysis.model_validate_json(_strip_code_fence(text))
+
+    async def analyze_product_description(
+        self,
+        description: str,
+        category: str,
+        price: float,
+        brand: str | None,
+    ) -> SellerProductDraft:
+        schema = json.dumps(
+            seller_product_json_schema_hint(), ensure_ascii=False
+        )
+        messages = [
+            {"role": "system", "content": SELLER_PRODUCT_SYSTEM},
+            {
+                "role": "user",
+                "content": (
+                    f"JSON Schema (field reference only; do not output the schema itself):\n{schema}\n\n"
+                    + build_seller_product_prompt(
+                        description, category, price, brand
+                    )
+                ),
+            },
+        ]
+        try:
+            response = await self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=0.3,
+                max_tokens=1024,
+                response_format={"type": "json_object"},
+                extra_body=self.extra_body,
+            )
+        except Exception:
+            response = await self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=0.3,
+                max_tokens=1024,
+                extra_body=self.extra_body,
+            )
+
+        text = response.choices[0].message.content or ""
+        return SellerProductDraft.model_validate_json(_strip_code_fence(text))
 
     async def stream_recommendation(
         self, context: RecommendationContext

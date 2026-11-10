@@ -10,52 +10,53 @@ def utc_now() -> datetime:
 
 
 class Product(SQLModel, table=True):
-                                  
-                                                             
-    __tablename__ = "products"         
+
+
+    __tablename__ = "products"
 
     id: str = Field(primary_key=True)
-                                                           
-                                                  
+
+
     name: str = Field(index=True)
-                            
+
     brand: str = Field(index=True)
     category: str = Field(index=True)
-                                                              
+
     price: float = Field(index=True)
     original_price: float | None = None
     rating: float = Field(default=0.0, index=True)
     review_count: int = 0
     description: str = ""
     attributes: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
-                                                 
-                                                 
-                                                                          
-                                                                  
+
+
+
+
     pros: list[str] = Field(default_factory=list, sa_column=Column(JSON))
     cons: list[str] = Field(default_factory=list, sa_column=Column(JSON))
     tags: list[str] = Field(default_factory=list, sa_column=Column(JSON))
-                                                        
+
     image_key: str = "default"
-          
+    seller_id: str | None = Field(default=None, index=True)
+
 
 class Review(SQLModel, table=True):
     __tablename__ = "reviews"
 
     id: int | None = Field(default=None, primary_key=True)
-                             
-                                                    
+
+
     product_id: str = Field(index=True, foreign_key="products.id")
-                                                                        
+
     rating: int = 5
     content: str = ""
     author: str = "Anonymous"
 
-                                                    
+
     user_id: str | None = Field(default=None, index=True)
     order_id: str | None = Field(default=None, index=True)
 
-                           
+
     sentiment: str = "neutral"
     summary: str = ""
     pros: list[str] = Field(default_factory=list, sa_column=Column(JSON))
@@ -94,7 +95,7 @@ class ChatMessage(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     session_id: str = Field(index=True, foreign_key="chat_sessions.id")
     role: str = "user"
-                                             
+
     content: str = ""
     meta: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
     created_at: datetime = Field(default_factory=utc_now)

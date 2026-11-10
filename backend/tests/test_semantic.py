@@ -49,7 +49,7 @@ async def test_semantic_scores_prefer_matching_product(db):
 
 def test_ranking_uses_semantic_score_when_available():
     products = [
-                                                                                 
+
         make_product(id="a", price=50, rating=4.5, reviews=1000),
         make_product(id="b", price=50, rating=4.5, reviews=1000),
     ]

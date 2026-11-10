@@ -23,11 +23,10 @@ from app.schemas import (
 )
 from app.services.sessions import add_message, get_or_create_session, touch_session
 
-                                                                  
 router = APIRouter(prefix="/chat", tags=["chat"])
 logger = logging.getLogger(__name__)
-                                                      
-                                                  
+
+
 def _scored_out(item) -> ScoredProductOut:
     return ScoredProductOut(
         product=ProductOut.model_validate(item.product),
@@ -37,11 +36,11 @@ def _scored_out(item) -> ScoredProductOut:
         warnings=item.warnings,
     )
 
-                  
- 
-                                       
- 
-                            
+
+
+
+
+
 
 
 def _proposal_for(result: AgentResult) -> PurchaseProposal | None:
@@ -66,7 +65,7 @@ def _assistant_meta(
     return {
         "provider": getattr(provider, "name", "unknown"),
         "intent": result.intent.model_dump(exclude_none=True),
-                                           
+
         "products": [item.model_dump() for item in products_out],
         "product_ids": [item.product.id for item in result.scored],
         "top_product_id": result.top_product_id,
@@ -81,11 +80,11 @@ def _sse(event: str, data: dict) -> dict[str, str]:
     """sse-starlette formats event/data into SSE frames."""
     return {"event": event, "data": json.dumps(data, ensure_ascii=False)}
 
-@router.post("", response_model=ChatResponse)                                   
+@router.post("", response_model=ChatResponse)
 async def chat(
     payload: ChatRequest,
     request: Request,
-    db: Session = Depends(get_session),                    
+    db: Session = Depends(get_session),
 ) -> ChatResponse:
     chat_session = get_or_create_session(
         db, session_id=payload.session_id, user_id=payload.user_id
@@ -102,7 +101,7 @@ async def chat(
     embedding_provider = getattr(request.app.state, "embedding_provider", None)
     result = await run_shopping_agent(
         session=db,
-        provider=provider,                             
+        provider=provider,
         message=payload.message,
         profile=profile,
         embedding_provider=embedding_provider,
@@ -124,7 +123,7 @@ async def chat(
         chat_session,
         profile=result.profile.model_dump(exclude_none=True),
         title=payload.message,
-    )            
+    )
 
     return ChatResponse(
         session_id=chat_session.id,
@@ -171,7 +170,7 @@ async def chat_stream(
                     content=payload.message,
                 )
 
-                                                       
+
                 yield _sse(
                     "session",
                     {"session_id": chat_session.id, "provider": provider_name},
@@ -186,7 +185,7 @@ async def chat_stream(
                     embedding_provider=embedding_provider,
                 ):
                     if event.event == "_final":
-                                                 
+
                         result = event.data["result"]
                         continue
 
@@ -224,7 +223,7 @@ async def chat_stream(
                     title=payload.message,
                 )
 
-                                                     
+
                 yield _sse(
                     "recommendation",
                     {
@@ -251,7 +250,7 @@ async def chat_stream(
                     "error",
                     {"code": exc.status_code, "message": exc.detail},
                 )
-            except Exception:                
+            except Exception:
                 logger.exception("Streaming chat failed")
                 yield _sse(
                     "error",

@@ -94,7 +94,12 @@ export function ProductModal({ item, onClose, onOrder, }: {
             {categoryEmoji(product.category)}
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-medium text-ink-soft">{product.brand}</p>
+            <p className="flex items-center gap-2 text-xs font-medium text-ink-soft">
+              {product.brand}
+              {product.seller_id ? (<span className="rounded-full bg-white/70 px-2 py-0.5 text-[10px] text-brand-dark">
+                  Independent seller
+                </span>) : null}
+            </p>
             <h2 className="mt-1 text-xl font-bold leading-tight text-ink sm:text-2xl">
               {product.name}
             </h2>

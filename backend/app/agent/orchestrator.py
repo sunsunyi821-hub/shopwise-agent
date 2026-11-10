@@ -23,8 +23,8 @@ from app.services.ranking import rank_products
 from app.services.semantic import build_query_text, compute_semantic_scores
 
 logger = logging.getLogger(__name__)
-                                    
-                                
+
+
 
 
 @dataclass
@@ -33,9 +33,9 @@ class AgentResult:
 
     intent: ShoppingIntent
     profile: ShoppingProfile
-    scored: list[ScoredProduct] = field(default_factory=list)                
-                                 
-                                      
+    scored: list[ScoredProduct] = field(default_factory=list)
+
+
     recommendation: str = ""
     top_product_id: str | None = None
     clarification: str | None = None
@@ -50,29 +50,29 @@ class AgentEvent:
     event: str
     data: dict[str, Any] = field(default_factory=dict)
 
-                         
-      
-      
-      
-       
-          
-                    
 
-        
-        
-                  
- 
-          
-        
-                      
- 
-       
-           
-      
- 
-        
-             
-               
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @dataclass
 class IntentPreparation:
     """Intent plus the merged profile and degradation flag."""
@@ -82,17 +82,17 @@ class IntentPreparation:
     degraded: bool
 
 
-                                                                             
-                   
- 
-                                         
-                                          
- 
-                                           
-                                    
- 
-                                                    
-                                                                             
+
+
+
+
+
+
+
+
+
+
+
 class ShoppingGraphState(TypedDict, total=False):
     message: str
     profile: ShoppingProfile
@@ -169,11 +169,11 @@ async def _prepare_intent(
     message: str,
     profile: ShoppingProfile,
 ) -> IntentPreparation:
-                                     
+
     try:
         intent = await provider.parse_intent(message, profile)
         degraded = False
-    except Exception as exc:                                                               
+    except Exception as exc:
         logger.warning(
             "Intent parsing failed (%s), falling back to rules: %s",
             provider.name,
@@ -182,7 +182,7 @@ async def _prepare_intent(
         intent = await MockProvider().parse_intent(message, profile)
         degraded = True
 
-                                                  
+
     return IntentPreparation(
         intent=intent,
         profile=profile.merged_with(intent),
@@ -195,7 +195,7 @@ def _clarification_for(
     profile: ShoppingProfile,
 ) -> str | None:
     if intent.needs_clarification or not profile.category:
-                              
+
         return (
             intent.clarification_question
             or "What kind of product are you looking for? For example: body wash, shampoo, or face cream."
@@ -212,15 +212,15 @@ async def _score_candidates(
     embedding_provider: EmbeddingProvider | None,
 ) -> list[ScoredProduct]:
     semantic_scores: dict[str, float] = {}
-                                               
+
     if embedding_provider is not None:
         query_text = build_query_text(message, profile)
         try:
             semantic_scores = await compute_semantic_scores(
                 session, embedding_provider, query_text
             )
-        except Exception as exc:                                                         
-                                                       
+        except Exception as exc:
+
             logger.warning(
                 "Semantic scoring failed (%s), continuing without it: %s",
                 getattr(embedding_provider, "model", "unknown"),
@@ -251,7 +251,7 @@ async def _write_recommendation(
 ) -> tuple[str, bool]:
     try:
         return await provider.write_recommendation(context), False
-    except Exception as exc:                
+    except Exception as exc:
         logger.warning(
             "Recommendation generation failed (%s), falling back to template: %s",
             provider.name,
@@ -260,12 +260,12 @@ async def _write_recommendation(
         return await MockProvider().write_recommendation(context), True
 
 
-                                                                             
-      
- 
-                                
-                                  
-                                                                             
+
+
+
+
+
+
 async def parse_intent_node(
     state: ShoppingGraphState,
     config: RunnableConfig,
@@ -296,7 +296,7 @@ def route_after_intent(state: ShoppingGraphState) -> str:
 
 
 async def clarify_node(state: ShoppingGraphState) -> dict:
-                                      
+
     _emit(AgentEvent("_final", {"result": _result_from_state(state)}))
     return {}
 
@@ -336,8 +336,8 @@ async def no_results_node(state: ShoppingGraphState) -> dict:
 
 
 async def analyze_node(state: ShoppingGraphState) -> dict:
-                                   
-                               
+
+
     _emit(_stage("analyze", "active"))
     _emit(_stage("analyze", "done"))
     return {}
@@ -386,14 +386,14 @@ async def recommend_node(
     recommendation = ""
 
     if config["configurable"].get("stream_recommendation"):
-                             
+
         chunks: list[str] = []
         try:
             async for token in provider.stream_recommendation(context):
                 chunks.append(token)
                 _emit(AgentEvent("token", {"text": token}))
             recommendation = "".join(chunks)
-        except Exception as exc:                
+        except Exception as exc:
             logger.warning(
                 "Streaming recommendation failed (%s), falling back to template: %s",
                 provider.name,
@@ -402,13 +402,13 @@ async def recommend_node(
             recommendation = await MockProvider().write_recommendation(context)
             degraded = True
     else:
-                         
+
         recommendation, recommendation_degraded = await _write_recommendation(
             provider, context
         )
         degraded = degraded or recommendation_degraded
 
-                                 
+
     if not recommendation.strip():
         recommendation = await MockProvider().write_recommendation(context)
         degraded = True
@@ -448,10 +448,10 @@ def build_shopping_graph():
     graph.add_node("rank", rank_node)
     graph.add_node("recommend", recommend_node)
 
-                                    
+
     graph.add_edge(START, "parse_intent")
 
-                                                
+
     graph.add_conditional_edges(
         "parse_intent",
         route_after_intent,
@@ -495,9 +495,9 @@ def _graph_config(
 async def run_shopping_agent(
     *,
     session: Session,
-    provider: LLMProvider,               
-    message: str,             
-    profile: ShoppingProfile,             
+    provider: LLMProvider,
+    message: str,
+    profile: ShoppingProfile,
     embedding_provider: EmbeddingProvider | None = None,
 ) -> AgentResult:
     """Non-streaming entry point: run the full graph and return AgentResult."""

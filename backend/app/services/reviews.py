@@ -19,7 +19,7 @@ async def analyze_review(
     """Run LLM analysis, falling back to rule-based analysis on failure."""
     try:
         return await provider.analyze_review(content, rating), False
-    except Exception as exc:                
+    except Exception as exc:
         logger.warning(
             "Review analysis failed (%s), falling back to rules: %s",
             getattr(provider, "name", "unknown"),
@@ -57,8 +57,8 @@ def create_review(
     )
     session.add(review)
 
-                                                   
-                                             
+
+
     product = session.get(Product, order.product_id)
     if product is not None:
         old_count = max(0, product.review_count)
@@ -96,7 +96,7 @@ def update_review(
     review.updated_at = datetime.now(UTC)
     session.add(review)
 
-                                   
+
     product = session.get(Product, review.product_id)
     if product is not None and product.review_count > 0:
         product.rating = round(

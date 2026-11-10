@@ -27,6 +27,7 @@ ShopWise will:
 5. **Write a recommendation** — top-3 table, top pick, reasons, and caveats, streamed token by token.
 6. **Confirm the order** — a demo order is created only after the user clicks confirm.
 7. **Review the purchase** — the buyer can write, view, and edit one review per order; an LLM structures it into sentiment, a summary, pros, cons, and tags for future shoppers.
+8. **Sell a product** — a seller describes an item and sets the price/category; an LLM structures the listing into a product record that enters the buyer catalog immediately.
 
 ### Screenshots
 
@@ -38,9 +39,9 @@ ShopWise will:
 |---|---|
 | ![Product](docs/assets/product-modal.png) | ![Order](docs/assets/order-success.png) |
 
-| View and edit a review | Structured review result |
-|---|---|
-| ![Review details](docs/assets/review-detail.png) | ![Review success](docs/assets/review-success.png) |
+| View and edit a review | Structured review result | Seller listing created |
+|---|---|---|
+| ![Review details](docs/assets/review-detail.png) | ![Review success](docs/assets/review-success.png) | ![Seller listing](docs/assets/seller-success.png) |
 
 ---
 
@@ -58,6 +59,7 @@ ShopWise will:
 - [x] Order history and order details
 - [x] Post-purchase reviews with LLM structuring
 - [x] Review viewing and editing; one review per order
+- [x] Seller listings: free-text description → LLM-structured product → buyer catalog
 - [x] Session replay with persisted product score snapshots
 - [ ] Evaluation set, Docker, CI, and public deployment
 
@@ -69,6 +71,7 @@ ShopWise will:
 flowchart LR
     U["Next.js Chat UI"] -->|POST /api/chat/stream| A["FastAPI"]
     U -->|POST /api/reviews| A
+    U -->|POST /api/seller/products| A
     A --> G["LangGraph StateGraph<br/>parse → search → rank → recommend<br/>clarify / no_results branches"]
     G --> P["Intent parsing<br/>LLM / Mock"]
     G --> S["Product search<br/>SQLite filters"]
@@ -76,20 +79,23 @@ flowchart LR
     G --> K["Ranking<br/>price / rating / reviews / preference / semantic"]
     G --> W["Recommendation<br/>LLM / Mock"]
     A --> RV["Review analysis<br/>LLM → ReviewAnalysis"]
+    A --> SL["Seller listing<br/>LLM → SellerProductDraft"]
     A --> O["Demo checkout"]
     S --> DB[(SQLite)]
     E --> DB
     O --> DB
     RV --> DB
+    SL --> DB
     P --> LLM["Anthropic / OpenAI-compatible"]
     E --> EMB["Qwen / OpenAI-compatible embeddings"]
     W --> LLM
     RV --> LLM
+    SL --> LLM
 ```
 
 | Layer | Responsibility | Directory |
 |---|---|---|
-| UI | Chat, product cards, agent trace, checkout, order history, reviews | `frontend/` |
+| UI | Chat, product cards, agent trace, checkout, order history, reviews, seller listing | `frontend/` |
 | API | Routes, validation, SSE, errors | `backend/app/api/` |
 | Agent | Intent parsing, LangGraph workflow, prompts, provider abstractions | `backend/app/agent/` |
 | Services | Catalog search, semantic scoring, ranking, reviews, sessions | `backend/app/services/` |
@@ -221,6 +227,8 @@ CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 | GET | `/api/orders/{id}/review` | Review for an order |
 | POST | `/api/reviews` | Submit a review |
 | PUT | `/api/reviews/{id}` | Edit a review |
+| POST | `/api/seller/products` | Create a seller listing |
+| GET | `/api/seller/products` | List a seller's products |
 
 See `/docs` for the full schema.
 
@@ -297,7 +305,19 @@ Reviews are stored in SQLite and shown on the product detail page. `PUT /api/rev
 
 ---
 
-## 11. Tests
+## 11. Seller listings
+
+`POST /api/seller/products` accepts a free-text description, a price, a category, an optional brand, and a seller ID.
+
+- The price and category come from the seller form and are never changed by the model.
+- The LLM returns a `SellerProductDraft` with a name, brand, cleaned description, attributes, pros, cons, and tags.
+- If the LLM fails, a rule-based analyzer produces the same structure and the response is marked `degraded=true`.
+- The product is saved with `seller_id`, initial `rating=0`, and `review_count=0`, and appears in the buyer catalog immediately.
+- `GET /api/seller/products?seller_id=...` lists a seller's listings.
+
+---
+
+## 12. Tests
 
 ```bash
 cd backend
@@ -311,7 +331,7 @@ node scripts/e2e-smoke.mjs   # requires both servers
 
 ---
 
-## 12. Project structure
+## 13. Project structure
 
 ```text
 backend/
@@ -338,15 +358,16 @@ docs/
 
 ---
 
-## 13. Notes
+## 14. Notes
 
 - The demo catalog, product names, and example prompts are in Chinese; the UI and codebase are in English.
+- Seller listings start with no ratings or reviews, so they rank as new products until buyers review them.
 - Orders are simulated: no payment, inventory, or shipping.
 - Product data is fictional and intended for demonstration only.
 - No real e-commerce site is scraped. Use official APIs and respect platform terms if you connect real data.
 
 ---
 
-## 14. License
+## 15. License
 
 MIT. Add a `LICENSE` file before publishing if needed.

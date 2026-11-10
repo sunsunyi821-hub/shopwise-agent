@@ -23,31 +23,31 @@ def _reviewed_order_ids(db: Session, orders: list[Order]) -> set[str]:
 
 
 @router.post("", response_model=OrderOut, status_code=201)
-                            
-                           
-     
-         
-                  
-     
-     
-      
-     
-      
-     
-    
-      
-     
-         
-              
-     
-     
-         
-              
-     
-     
-       
-       
-def create_order(                                       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def create_order(
     payload: OrderCreate, db: Session = Depends(get_session)
 ) -> OrderOut:
     if not payload.confirm:
@@ -62,11 +62,11 @@ def create_order(
 
     unit_price = product.price
     total_price = round(unit_price * payload.quantity, 2)
-                   
-                    
+
+
     order = Order(
         id=f"SW-{datetime.now(UTC):%Y%m%d}-{uuid4().hex[:6].upper()}",
-                            
+
         user_id=payload.user_id,
         session_id=payload.session_id,
         product_id=product.id,
@@ -84,9 +84,9 @@ def create_order(
 
 
 @router.get("", response_model=list[OrderOut])
-def list_orders(       
+def list_orders(
     user_id: str = Query(default="demo-user"),
-                                            
+
     limit: int = Query(default=30, ge=1, le=100),
     db: Session = Depends(get_session),
 ) -> list[OrderOut]:
@@ -94,8 +94,8 @@ def list_orders(
         db.exec(
             select(Order)
             .where(Order.user_id == user_id)
-            .order_by(Order.created_at.desc())                 
-            .limit(limit)             
+            .order_by(Order.created_at.desc())
+            .limit(limit)
         ).all()
     )
     reviewed = _reviewed_order_ids(db, orders)
@@ -114,7 +114,7 @@ def get_order(
     db: Session = Depends(get_session),
 ) -> OrderOut:
     order = db.get(Order, order_id)
-                  
+
     if order is None or order.user_id != user_id:
         raise HTTPException(status_code=404, detail="Order not found")
     reviewed = (

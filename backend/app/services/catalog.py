@@ -19,16 +19,16 @@ def _text_blob(product: Product) -> str:
         product.category,
         product.description,
         *product.tags,
-                                 
+
         *[str(value) for value in product.attributes.values()],
     ]
     return " ".join(parts).lower()
-               
+
 
 def _passes_exclusions(product: Product, exclude_keywords: list[str]) -> bool:
     blob = _text_blob(product)
     return not any(keyword.lower() in blob for keyword in exclude_keywords if keyword)
-                       
+
 
 def _matches_include_brands(product: Product, brands: list[str]) -> bool:
     if not brands:

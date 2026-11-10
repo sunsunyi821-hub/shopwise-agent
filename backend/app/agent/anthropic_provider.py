@@ -6,13 +6,16 @@ from app.agent.prompts import (
     INTENT_SYSTEM,
     RECOMMENDATION_SYSTEM,
     REVIEW_SYSTEM,
+    SELLER_PRODUCT_SYSTEM,
     build_intent_prompt,
     build_recommendation_prompt,
     build_review_prompt,
+    build_seller_product_prompt,
 )
 from app.agent.state import (
     RecommendationContext,
     ReviewAnalysis,
+    SellerProductDraft,
     ShoppingIntent,
     ShoppingProfile,
 )
@@ -80,6 +83,32 @@ class AnthropicProvider:
         )
         if response.parsed_output is None:
             raise ValueError("Anthropic returned no parsed review analysis")
+        return response.parsed_output
+
+    async def analyze_product_description(
+        self,
+        description: str,
+        category: str,
+        price: float,
+        brand: str | None,
+    ) -> SellerProductDraft:
+        response = await self.client.messages.parse(
+            model=self.model,
+            max_tokens=1024,
+            system=SELLER_PRODUCT_SYSTEM,
+            messages=[
+                {
+                    "role": "user",
+                    "content": build_seller_product_prompt(
+                        description, category, price, brand
+                    ),
+                }
+            ],
+            output_format=SellerProductDraft,
+            output_config={"effort": "low"},
+        )
+        if response.parsed_output is None:
+            raise ValueError("Anthropic returned no parsed product draft")
         return response.parsed_output
 
     async def stream_recommendation(

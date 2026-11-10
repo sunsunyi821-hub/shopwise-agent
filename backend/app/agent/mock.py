@@ -5,6 +5,7 @@ from collections.abc import AsyncIterator
 from app.agent.state import (
     RecommendationContext,
     ReviewAnalysis,
+    SellerProductDraft,
     ShoppingIntent,
     ShoppingProfile,
 )
@@ -233,7 +234,7 @@ class MockProvider:
 
         brands = [brand for brand in KNOWN_BRANDS if brand in text]
 
-                                                                          
+
         if budget is None and any(word in text for word in ("便宜", "降价", "低一点")):
             if profile.budget_max:
                 budget = round(profile.budget_max * 0.8, 2)
@@ -306,6 +307,59 @@ class MockProvider:
         return ReviewAnalysis(
             sentiment=sentiment,
             summary=summary,
+            pros=pros,
+            cons=cons,
+            tags=tags,
+        )
+
+    async def analyze_product_description(
+        self,
+        description: str,
+        category: str,
+        price: float,
+        brand: str | None,
+    ) -> SellerProductDraft:
+        """Rule-based seller listing analysis for demos and LLM fallback."""
+        text = description.strip()
+        sentences = [
+            sentence.strip()
+            for sentence in re.split(r"[。！？!?；;，,\n]", text)
+            if sentence.strip()
+        ]
+        provided_brand = (brand or "").strip()
+        name = sentences[0][:28] if sentences else f"{category} listing"
+        if provided_brand:
+            name = f"{provided_brand} {name}"
+        name = name[:40]
+
+        pros = [
+            sentence[:24]
+            for sentence in sentences
+            if _has_hint(sentence, POSITIVE_HINTS)
+        ][:3]
+        cons = [
+            sentence[:24]
+            for sentence in sentences
+            if _has_hint(sentence, NEGATIVE_HINTS)
+        ][:3]
+        tags = list(
+            dict.fromkeys(
+                [
+                    category,
+                    *[
+                        label
+                        for keyword, label in REVIEW_TAG_HINTS.items()
+                        if keyword in text
+                    ],
+                ]
+            )
+        )[:5]
+
+        return SellerProductDraft(
+            name=name,
+            brand=provided_brand or "Independent seller",
+            description=text,
+            attributes=_find_attributes(text),
             pros=pros,
             cons=cons,
             tags=tags,

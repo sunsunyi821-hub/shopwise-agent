@@ -61,7 +61,7 @@ def _description(name: str, brand: str, category: str, attrs: dict) -> str:
 
 
 PRODUCTS = [
-                                           
+
     P("bw-001", "氨基酸温和沐浴露", "清岚", "沐浴露", 69, 89, 4.7, 2380,
       {"skin_type": "敏感肌", "scent": "无香", "function": "保湿", "volume_ml": 500,
        "key_ingredients": ["氨基酸", "神经酰胺"]},
@@ -95,7 +95,7 @@ PRODUCTS = [
        "key_ingredients": ["咖啡因", "薄荷"]},
       ["提神", "便宜"], ["薄荷刺激", "冬天偏凉"], ["清爽", "薄荷", "性价比"]),
 
-                                           
+
     P("hs-001", "氨基酸控油洗发水", "清岚", "洗发水", 79, 99, 4.6, 3100,
       {"hair_type": "油性", "function": "控油", "scent": "柑橘", "volume_ml": 500,
        "key_ingredients": ["氨基酸", "吡啶硫酮锌"]},
@@ -121,7 +121,7 @@ PRODUCTS = [
        "key_ingredients": ["咖啡因", "生姜"]},
       ["掉发减少", "木质香"], ["价格高", "效果慢"], ["防脱", "修护"]),
 
-                                          
+
     P("fc-001", "神经酰胺修护面霜", "简植", "面霜", 129, 159, 4.8, 1800,
       {"skin_type": "敏感肌", "function": "修护", "texture": "滋润", "volume_ml": 50,
        "key_ingredients": ["神经酰胺", "角鲨烷"]},
@@ -147,7 +147,7 @@ PRODUCTS = [
        "key_ingredients": ["视黄醇", "胜肽"]},
       ["细纹改善"], ["刺激", "需避光", "评价少"], ["抗老", "视黄醇"]),
 
-                                           
+
     P("fs-001", "轻透防晒乳", "清岚", "防晒霜", 99, 129, 4.6, 2800,
       {"skin_type": "敏感肌", "texture": "清爽", "volume_ml": 50, "spf": 50, "pa": "++++",
        "key_ingredients": ["氧化锌", "烟酰胺"]},
@@ -173,7 +173,7 @@ PRODUCTS = [
        "key_ingredients": ["烟酰胺", "VC"]},
       ["提亮", "不油腻"], ["敏感肌刺痛"], ["美白", "SPF50"]),
 
-                                          
+
     P("tp-001", "抗敏修护牙膏", "清岚", "牙膏", 39, 49, 4.6, 3200,
       {"function": "抗敏", "flavor": "薄荷", "volume_ml": 120,
        "key_ingredients": ["硝酸钾", "氟化钠"]},
@@ -195,7 +195,7 @@ PRODUCTS = [
        "key_ingredients": ["酵素", "绿茶提取物"]},
       ["温和", "绿茶味"], ["美白慢", "价格高"], ["美白", "绿茶"]),
 
-                                           
+
     P("ld-001", "除菌洗衣液", "清岚", "洗衣液", 59, 79, 4.7, 4800,
       {"function": "除菌", "scent": "花香", "volume_ml": 3000,
        "key_ingredients": ["除菌因子", "酶"]},

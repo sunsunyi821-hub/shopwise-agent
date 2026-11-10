@@ -13,6 +13,11 @@ export type Product = {
     cons: string[];
     tags: string[];
     image_key: string;
+    seller_id: string | null;
+};
+export type SellerProductCreated = {
+    product: Product;
+    degraded: boolean;
 };
 export type ScoredProduct = {
     product: Product;

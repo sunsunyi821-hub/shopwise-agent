@@ -1,4 +1,4 @@
-import type { ChatResponse, Order, Review, SessionDetail, SessionSummary, } from "./types";
+import type { ChatResponse, Order, Review, SellerProductCreated, SessionDetail, SessionSummary, } from "./types";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api";
 export class ApiError extends Error {
     status: number;
@@ -130,6 +130,21 @@ export const api = {
             degraded: boolean;
         }>(`/reviews/${reviewId}`, {
             method: "PUT",
+            body: JSON.stringify(payload),
+        });
+    },
+    categories() {
+        return request<string[]>("/products/categories");
+    },
+    createSellerProduct(payload: {
+        description: string;
+        price: number;
+        category: string;
+        brand?: string;
+        seller_id: string;
+    }) {
+        return request<SellerProductCreated>("/seller/products", {
+            method: "POST",
             body: JSON.stringify(payload),
         });
     },

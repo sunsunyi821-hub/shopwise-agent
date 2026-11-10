@@ -5,44 +5,46 @@ from typing import Protocol
 from app.agent.state import (
     RecommendationContext,
     ReviewAnalysis,
+    SellerProductDraft,
     ShoppingIntent,
     ShoppingProfile,
 )
 
 logger = logging.getLogger(__name__)
 
-                                                                          
- 
-                                             
- 
-         
- 
-                                      
- 
-                      
-class LLMProvider(Protocol):                          
+
+
+
+
+
+
+
+
+
+class LLMProvider(Protocol):
     """Minimal provider contract used by the shopping agent.
 
     The agent only needs these capabilities:
     1. turn a fuzzy user message into a structured shopping intent;
     2. write a recommendation from already-ranked products;
-    3. turn a free-text review into a structured ReviewAnalysis.
+    3. turn a free-text review into a structured ReviewAnalysis;
+    4. turn a seller description into a structured SellerProductDraft.
     """
-         
-              
-       
-            
-              
-     
-                             
-     
-                  
-     
-         
-              
-       
-         
-                          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     name: str
 
     async def parse_intent(
@@ -53,41 +55,49 @@ class LLMProvider(Protocol):
 
     async def analyze_review(self, content: str, rating: int) -> ReviewAnalysis: ...
 
+    async def analyze_product_description(
+        self,
+        description: str,
+        category: str,
+        price: float,
+        brand: str | None,
+    ) -> SellerProductDraft: ...
+
     def stream_recommendation(
         self, context: RecommendationContext
     ) -> AsyncIterator[str]: ...
-                                    
- 
-               
- 
-                                  
- 
-                          
- 
-                                    
- 
-                      
- 
-                                                                                                                                         
- 
-       
- 
-                        
- 
-          
- 
-   
-                      
-                      
-                   
-                         
-                   
-      
-                                 
-                      
-   
- 
-                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def create_provider(settings) -> LLMProvider:
     """Create the configured provider, falling back to Mock if credentials are missing."""
@@ -110,6 +120,6 @@ def create_provider(settings) -> LLMProvider:
             return MockProvider()
 
     return MockProvider()
-                                          
- 
-                             
+
+
+

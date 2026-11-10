@@ -166,6 +166,15 @@ The frontend updates the pending message on every event:
 5. Product details load reviews through `GET /api/products/{id}/reviews`.
 6. An existing review can be loaded with `GET /api/orders/{id}/review` and edited with `PUT /api/reviews/{id}`.
 
+### Station 10: Seller listing
+
+1. Click “Sell” in the header and open the seller modal.
+2. The seller writes a description, sets a price, chooses a catalog category, and optionally adds a brand.
+3. `POST /api/seller/products` validates the category.
+4. `provider.analyze_product_description(...)` returns a `SellerProductDraft`.
+5. The product is saved with `seller_id`, `rating=0`, and `review_count=0`.
+6. The listing is immediately available to buyer search and ranking.
+
 ---
 
 ## 2. File map
@@ -175,7 +184,7 @@ The frontend updates the pending message on every event:
 | `backend/app/main.py` | FastAPI assembly, lifespan, routers |
 | `backend/app/models.py` | Product, Review, session, message, order tables |
 | `backend/app/seed.py` | Why seed data is JSON and reproducible |
-| `backend/app/agent/state.py` | Profile, intent, scored product, review analysis |
+| `backend/app/agent/state.py` | Profile, intent, scored product, review analysis, seller draft |
 | `backend/app/agent/orchestrator.py` | LangGraph graph, nodes, run/stream entry points |
 | `backend/app/agent/mock.py` | Rule-based parser and recommendation |
 | `backend/app/agent/openai_provider.py` | OpenAI-compatible chat and review analysis |
@@ -183,8 +192,10 @@ The frontend updates the pending message on every event:
 | `backend/app/services/catalog.py` | Search and relaxation |
 | `backend/app/services/semantic.py` | Vector cache and cosine similarity |
 | `backend/app/services/reviews.py` | Review analysis, save, aggregate update |
+| `backend/app/services/seller.py` | Seller description analysis and product persistence |
 | `backend/app/api/routes_chat.py` | Chat and SSE routes |
 | `backend/app/api/routes_reviews.py` | Review routes |
+| `backend/app/api/routes_seller.py` | Seller listing routes |
 | `frontend/src/app/page.tsx` | Chat state and streaming orchestration |
 | `frontend/src/lib/api.ts` | HTTP client and SSE parser |
 | `frontend/src/lib/history.ts` | Replay stored messages into ChatResponse |
@@ -192,6 +203,7 @@ The frontend updates the pending message on every event:
 | `frontend/src/components/product-modal.tsx` | Score breakdown and reviews |
 | `frontend/src/components/orders-modal.tsx` | Order details and review actions |
 | `frontend/src/components/review-modal.tsx` | Create/edit review form |
+| `frontend/src/components/seller-modal.tsx` | Seller listing form and structured result |
 
 ---
 

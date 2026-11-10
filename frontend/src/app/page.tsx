@@ -1,11 +1,12 @@
 "use client";
-import { ArrowRight, Package, Sparkles } from "lucide-react";
+import { ArrowRight, Package, Sparkles, Store } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChatMessage } from "@/components/chat-message";
 import { Composer } from "@/components/composer";
 import { OrderModal } from "@/components/order-modal";
 import { OrdersModal } from "@/components/orders-modal";
 import { ProductModal } from "@/components/product-modal";
+import { SellerModal } from "@/components/seller-modal";
 import { Sidebar } from "@/components/sidebar";
 import { api } from "@/lib/api";
 import { buildHistoryResponse } from "@/lib/history";
@@ -67,6 +68,7 @@ export default function HomePage() {
     const [toast, setToast] = useState<string | null>(null);
     const [ordersOpen, setOrdersOpen] = useState(false);
     const [ordersVersion, setOrdersVersion] = useState(0);
+    const [sellerOpen, setSellerOpen] = useState(false);
     const bottomRef = useRef<HTMLDivElement>(null);
     const streamAbortRef = useRef<AbortController | null>(null);
     const refreshSessions = useCallback(async () => {
@@ -302,6 +304,10 @@ export default function HomePage() {
             <span className="hidden rounded-full border border-brand/15 bg-brand-soft/70 px-2.5 py-1 text-[10px] font-medium text-brand-dark sm:inline">
               Simulated checkout
             </span>
+            <button type="button" onClick={() => setSellerOpen(true)} className="flex items-center gap-1 rounded-full border border-brand/20 bg-brand-soft/70 px-2.5 py-1 text-[10px] font-medium text-brand-dark transition hover:bg-brand-soft">
+              <Store className="h-3 w-3"/>
+              Sell
+            </button>
             <button type="button" onClick={() => setOrdersOpen(true)} className="flex items-center gap-1 rounded-full border border-line bg-card px-2.5 py-1 text-[10px] font-medium text-ink-soft transition hover:border-brand/30 hover:text-brand">
               <Package className="h-3 w-3"/>
               Orders
@@ -343,6 +349,7 @@ export default function HomePage() {
             setOrdersVersion((value) => value + 1);
         }}/>
       <OrdersModal open={ordersOpen} userId={USER_ID} version={ordersVersion} onClose={() => setOrdersOpen(false)}/>
+      <SellerModal open={sellerOpen} sellerId="demo-seller" onClose={() => setSellerOpen(false)}/>
 
       {toast ? (<div className="fixed bottom-24 left-1/2 z-[70] -translate-x-1/2 rounded-full bg-ink px-4 py-2 text-xs font-medium text-white shadow-xl">
           {toast}

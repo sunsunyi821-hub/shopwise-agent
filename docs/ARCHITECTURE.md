@@ -75,6 +75,7 @@ sequenceDiagram
 | `attributes` | JSON attributes such as skin type, scent, volume |
 | `pros`, `cons`, `tags` | JSON display data |
 | `image_key` | Frontend placeholder key |
+| `seller_id` | Seller owner for listings; null for seed products |
 
 ### 3.2 Review
 
@@ -136,6 +137,19 @@ If LLM analysis fails, a rule-based `MockProvider.analyze_review` is used and th
 ### 3.5 ProductEmbedding
 
 Caches product vectors keyed by `product_id` and `model`; `text_hash` invalidates stale rows when product text changes.
+
+### 3.6 Seller listing
+
+```text
+POST /api/seller/products
+  → validate category against the catalog
+  → provider.analyze_product_description(description, category, price, brand)
+  → SellerProductDraft (Pydantic validation)
+  → save Product with seller_id, rating=0, review_count=0
+  → the product is immediately searchable by buyers
+```
+
+The form-authoritative `price` and `category` are never changed by the model. If LLM analysis fails, a rule-based `MockProvider.analyze_product_description` is used and the response is marked `degraded=true`.
 
 ---
 
@@ -215,6 +229,7 @@ class LLMProvider(Protocol):
     async def write_recommendation(...) -> str: ...
     async def stream_recommendation(...) -> AsyncIterator[str]: ...
     async def analyze_review(...) -> ReviewAnalysis: ...
+    async def analyze_product_description(...) -> SellerProductDraft: ...
 ```
 
 | Provider | Use |
@@ -256,6 +271,7 @@ backend/app/
     routes_chat.py
     routes_orders.py
     routes_reviews.py
+    routes_seller.py
     routes_sessions.py
   agent/
     state.py              # Intent / Profile / ScoredProduct / ReviewAnalysis
@@ -271,6 +287,7 @@ backend/app/
     semantic.py           # vector cache and cosine similarity
     ranking.py            # weighted ranking
     reviews.py            # review analysis, persistence, aggregate update
+    seller.py             # seller listing analysis and product persistence
     sessions.py           # sessions and profile merging
   data/products.json      # Chinese demo catalog
 ```
@@ -284,6 +301,7 @@ backend/app/
 | Data source | Local demo catalog | Reproducible, no scraping risk | Not real products |
 | Ranking | Weighted rules + LLM explanation | Explainable and testable | Less flexible than pure LLM |
 | Retrieval | Embeddings as a ranking signal | Complement keyword gaps without violating constraints | Extra API call and vector storage |
+| Seller listings | LLM structures the description; form owns price/category | Consistent, searchable listings without letting the model set price | LLM may omit details; rule-based fallback |
 | Checkout | User confirmation + demo order | Safe to demo | No real payment |
 | Database | SQLite | Zero setup | Limited concurrency |
 | Frontend | Next.js | Strong portfolio signal | Heavier than Vite |

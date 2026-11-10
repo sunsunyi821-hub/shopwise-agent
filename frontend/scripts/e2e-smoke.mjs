@@ -65,4 +65,19 @@ await page
     .first()
     .waitFor({ timeout: 15000 });
 console.log("history replay ok");
+await page.locator("header").getByRole("button", { name: "Sell" }).click();
+const sellerDialog = page.getByRole("dialog");
+await sellerDialog.getByText("List my product").waitFor({ timeout: 15000 });
+await sellerDialog
+    .getByPlaceholder(/For example: a 500ml amino-acid body wash/)
+    .fill("Demo Shop amino-acid body wash, 500ml, suitable for sensitive skin, fragrance-free, gentle foam, ¥59. The pump is a little stiff.");
+await sellerDialog.locator('input[type="number"]').fill("59");
+await sellerDialog
+    .getByPlaceholder("Independent seller / your brand")
+    .fill("Demo Shop");
+await sellerDialog.getByRole("button", { name: "List with Agent" }).click();
+await sellerDialog.getByText("Listing created").waitFor({ timeout: 60000 });
+await page.screenshot({ path: "../docs/assets/seller-success.png" });
+await sellerDialog.getByRole("button", { name: "Done" }).click();
+console.log("seller flow ok");
 await browser.close();

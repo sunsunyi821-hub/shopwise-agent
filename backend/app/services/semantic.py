@@ -74,7 +74,7 @@ async def ensure_embeddings(session: Session, provider: EmbeddingProvider) -> in
 
     try:
         vectors = await provider.embed([text for _, text, _ in pending])
-    except Exception as exc:                                         
+    except Exception as exc:
         logger.warning("Failed to create product embeddings: %s", exc)
         raise
 
@@ -120,7 +120,7 @@ async def compute_semantic_scores(
 
     try:
         query_vector = (await provider.embed([query_text]))[0]
-    except Exception as exc:                                                            
+    except Exception as exc:
         logger.warning("Query embedding failed: %s", exc)
         return {}
 

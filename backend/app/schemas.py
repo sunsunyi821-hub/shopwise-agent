@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Any
-                                                                   
- 
-                     
+
+
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.agent.state import ShoppingIntent
@@ -10,118 +10,118 @@ from app.agent.state import ShoppingIntent
 
 class ProductOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-              
-              
-                       
-                            
-                      
-       
-     
-            
-     
-                                    
-     
-                                  
-                 
-                   
-                      
-     
-         
-     
-                                              
-     
-                 
-              
-         
-     
-             
-     
-                  
-     
-         
-     
-                   
-               
-                    
-     
-         
-     
-                  
-                   
-                
-     
-                
-     
-                  
-     
-          
-     
-                     
-     
-              
-     
-                      
-                                    
-     
-            
-     
-                                                     
-     
-              
-                          
-     
-             
-     
-                                                
-     
-                                  
-                                                         
-     
-                 
-                   
-                      
-     
-                    
-                             
-                              
-                                   
-                             
-     
-                         
-     
-                                                 
-     
-                                   
-                                 
-     
-        
-             
-                
-            
-               
-             
-       
-              
-           
-     
-              
-          
-     
-                
-                  
-                   
-     
-           
-     
-                 
-                    
-                         
-                     
-       
-     
-         
-                            
-          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     id: str
     name: str
     brand: str
@@ -136,6 +136,20 @@ class ProductOut(BaseModel):
     cons: list[str] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)
     image_key: str
+    seller_id: str | None = None
+
+
+class SellerProductCreate(BaseModel):
+    description: str = Field(min_length=10, max_length=2000)
+    price: float = Field(gt=0, le=100000)
+    category: str = Field(min_length=1, max_length=32)
+    brand: str | None = Field(default=None, max_length=50)
+    seller_id: str = Field(default="demo-seller", min_length=1, max_length=64)
+
+
+class SellerProductCreatedOut(BaseModel):
+    product: ProductOut
+    degraded: bool = False
 
 
 class ProductListResponse(BaseModel):

@@ -3,6 +3,7 @@ import json
 from app.agent.state import (
     RecommendationContext,
     ReviewAnalysis,
+    SellerProductDraft,
     ShoppingIntent,
     ShoppingProfile,
 )
@@ -76,6 +77,33 @@ Rules:
 5. Write summary, pros, cons, and tags in the same language as the review text.
 """
 
+SELLER_PRODUCT_SYSTEM = """You are ShopWise's product listing assistant.
+You receive a seller's free-text description plus form-authoritative category, price, and brand.
+Turn the description into structured product data for buyer search, ranking, and display.
+
+Return JSON only. Do not return explanations, Markdown, or code fences. Fields:
+- name: a concise product name, at most 30 words
+- brand: the provided brand; if absent, use "Independent seller"
+- description: a cleaned description that preserves the seller's meaning without exaggeration
+- attributes: object with optional keys:
+  skin_type (敏感肌/干性/油性/混合性/中性),
+  scent (无香/花香/柑橘/木质/果香),
+  hair_type (油性/干性/中性),
+  function (控油/去屑/保湿/修护/美白/抗敏/除菌/留香/蓬松),
+  texture (清爽/滋润), volume_ml (number), spf (number), pa (string),
+  flavor (薄荷/蜜桃/绿茶), key_ingredients (array of strings)
+- pros: up to 3 short selling points
+- cons: up to 3 limitations or cautions
+- tags: up to 5 topic tags
+
+Rules:
+1. Use only the information the seller provided; never invent certifications, ingredients, or claims.
+2. The category and price come from the form. Do not change them.
+3. Use empty arrays or an empty object for fields the seller did not mention.
+4. Do not promise medical effects or absolute results.
+5. Keep attribute values in the Chinese form used by the catalog when applicable.
+"""
+
 
 def build_intent_prompt(message: str, profile: ShoppingProfile) -> str:
     payload = {
@@ -129,5 +157,26 @@ def intent_json_schema_hint() -> dict:
     return ShoppingIntent.model_json_schema()
 
 
+def build_seller_product_prompt(
+    description: str,
+    category: str,
+    price: float,
+    brand: str | None,
+) -> str:
+    return json.dumps(
+        {
+            "description": description,
+            "category": category,
+            "price": price,
+            "brand": brand,
+        },
+        ensure_ascii=False,
+    )
+
+
 def review_json_schema_hint() -> dict:
     return ReviewAnalysis.model_json_schema()
+
+
+def seller_product_json_schema_hint() -> dict:
+    return SellerProductDraft.model_json_schema()

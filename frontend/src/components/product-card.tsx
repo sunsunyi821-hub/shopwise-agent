@@ -20,6 +20,9 @@ export function ProductCard({ item, onOpen }: Props) {
           <span className="absolute bottom-2 left-2 rounded-full bg-white/75 px-2 py-0.5 text-[10px] font-medium text-ink-soft backdrop-blur">
             {product.brand}
           </span>
+          {product.seller_id ? (<span className="absolute left-2 top-2 rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-semibold text-brand-dark backdrop-blur">
+              Independent seller
+            </span>) : null}
         </div>
 
         <h3 className="mt-3 line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-snug text-ink">

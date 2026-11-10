@@ -18,6 +18,7 @@ Completed:
 - [x] Demo checkout and order history
 - [x] Post-purchase reviews with LLM structuring
 - [x] Review viewing and editing
+- [x] Seller listings with LLM-structured product data
 - [x] Session replay with persisted product snapshots
 - [x] Backend tests and Playwright smoke test
 

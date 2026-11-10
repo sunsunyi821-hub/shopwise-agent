@@ -24,5 +24,5 @@ def session_detail(
     db: Session = Depends(get_session),
 ) -> SessionOut:
     return get_session_detail(db, session_id=session_id, user_id=user_id)
-                                                                       
-                                                              
+
+
