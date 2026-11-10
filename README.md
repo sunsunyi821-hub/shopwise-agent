@@ -16,7 +16,7 @@ ShopWise is a portfolio project for learning and demonstrating agent application
 
 A user can type:
 
-> 我想买一瓶沐浴露，预算 100 以内，敏感肌，最好没有香味
+> 我想买洗发水，预算 100 以内，可以去除头屑
 
 ShopWise will:
 
