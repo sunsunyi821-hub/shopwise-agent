@@ -1,0 +1,1889 @@
+{
+  "products": [
+    {
+      "id": "bw-001",
+      "name": "氨基酸温和沐浴露",
+      "brand": "清岚",
+      "category": "沐浴露",
+      "price": 69,
+      "original_price": 89,
+      "rating": 4.7,
+      "review_count": 2380,
+      "description": "清岚 氨基酸温和沐浴露，适合敏感肌，主打保湿，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "敏感肌",
+        "scent": "无香",
+        "function": "保湿",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "氨基酸",
+          "神经酰胺"
+        ]
+      },
+      "pros": [
+        "洗后不紧绷",
+        "泡沫细腻",
+        "无香精"
+      ],
+      "cons": [
+        "泵头偏紧"
+      ],
+      "tags": [
+        "敏感肌",
+        "无香",
+        "保湿"
+      ],
+      "image_key": "bw-001"
+    },
+    {
+      "id": "bw-002",
+      "name": "净透控油沐浴露",
+      "brand": "沐野",
+      "category": "沐浴露",
+      "price": 59,
+      "original_price": 79,
+      "rating": 4.5,
+      "review_count": 1860,
+      "description": "沐野 净透控油沐浴露，适合油性，主打控油，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "油性",
+        "scent": "柑橘",
+        "function": "控油",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "水杨酸",
+          "茶树"
+        ]
+      },
+      "pros": [
+        "清爽",
+        "控油持久",
+        "柑橘香清新"
+      ],
+      "cons": [
+        "干皮会紧绷"
+      ],
+      "tags": [
+        "油皮",
+        "控油",
+        "清爽"
+      ],
+      "image_key": "bw-002"
+    },
+    {
+      "id": "bw-003",
+      "name": "神经酰胺修护沐浴露",
+      "brand": "简植",
+      "category": "沐浴露",
+      "price": 89,
+      "original_price": 109,
+      "rating": 4.8,
+      "review_count": 960,
+      "description": "简植 神经酰胺修护沐浴露，适合敏感肌，主打修护，400ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "敏感肌",
+        "scent": "无香",
+        "function": "修护",
+        "volume_ml": 400,
+        "key_ingredients": [
+          "神经酰胺",
+          "泛醇"
+        ]
+      },
+      "pros": [
+        "修护屏障",
+        "温和",
+        "无香"
+      ],
+      "cons": [
+        "价格偏高"
+      ],
+      "tags": [
+        "敏感肌",
+        "修护",
+        "无香"
+      ],
+      "image_key": "bw-003"
+    },
+    {
+      "id": "bw-004",
+      "name": "海盐磨砂沐浴露",
+      "brand": "海屿",
+      "category": "沐浴露",
+      "price": 79,
+      "original_price": 99,
+      "rating": 4.3,
+      "review_count": 3200,
+      "description": "海屿 海盐磨砂沐浴露，适合中性，主打清洁，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "中性",
+        "scent": "木质",
+        "function": "清洁",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "海盐",
+          "甘油"
+        ]
+      },
+      "pros": [
+        "磨砂细腻",
+        "香味高级"
+      ],
+      "cons": [
+        "敏感肌慎用",
+        "颗粒感明显"
+      ],
+      "tags": [
+        "磨砂",
+        "木质香"
+      ],
+      "image_key": "bw-004"
+    },
+    {
+      "id": "bw-005",
+      "name": "氨基酸云朵沐浴露",
+      "brand": "初本",
+      "category": "沐浴露",
+      "price": 49,
+      "original_price": 69,
+      "rating": 4.4,
+      "review_count": 5200,
+      "description": "初本 氨基酸云朵沐浴露，适合干性，主打保湿，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "干性",
+        "scent": "花香",
+        "function": "保湿",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "氨基酸",
+          "玻尿酸"
+        ]
+      },
+      "pros": [
+        "便宜大碗",
+        "泡沫丰富",
+        "花香淡雅"
+      ],
+      "cons": [
+        "留香一般"
+      ],
+      "tags": [
+        "干皮",
+        "花香",
+        "性价比"
+      ],
+      "image_key": "bw-005"
+    },
+    {
+      "id": "bw-006",
+      "name": "果酸焕肤沐浴露",
+      "brand": "研白",
+      "category": "沐浴露",
+      "price": 99,
+      "original_price": 129,
+      "rating": 4.2,
+      "review_count": 780,
+      "description": "研白 果酸焕肤沐浴露，适合油性，主打去角质，300ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "油性",
+        "scent": "果香",
+        "function": "去角质",
+        "volume_ml": 300,
+        "key_ingredients": [
+          "果酸",
+          "烟酰胺"
+        ]
+      },
+      "pros": [
+        "去鸡皮",
+        "果香清新"
+      ],
+      "cons": [
+        "需要防晒",
+        "敏感肌刺痛"
+      ],
+      "tags": [
+        "油皮",
+        "果酸",
+        "去角质"
+      ],
+      "image_key": "bw-006"
+    },
+    {
+      "id": "bw-007",
+      "name": "婴儿级无泪沐浴露",
+      "brand": "云栖",
+      "category": "沐浴露",
+      "price": 99,
+      "original_price": 119,
+      "rating": 4.9,
+      "review_count": 1500,
+      "description": "云栖 婴儿级无泪沐浴露，适合敏感肌，主打温和，400ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "敏感肌",
+        "scent": "无香",
+        "function": "温和",
+        "volume_ml": 400,
+        "key_ingredients": [
+          "氨基酸",
+          "燕麦"
+        ]
+      },
+      "pros": [
+        "婴儿可用",
+        "无泪配方",
+        "极简成分"
+      ],
+      "cons": [
+        "清洁力偏弱"
+      ],
+      "tags": [
+        "敏感肌",
+        "婴童",
+        "无香"
+      ],
+      "image_key": "bw-007"
+    },
+    {
+      "id": "bw-008",
+      "name": "咖啡因醒肤沐浴露",
+      "brand": "素造",
+      "category": "沐浴露",
+      "price": 45,
+      "original_price": 59,
+      "rating": 4.0,
+      "review_count": 2100,
+      "description": "素造 咖啡因醒肤沐浴露，适合中性，主打清爽，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "中性",
+        "scent": "木质",
+        "function": "清爽",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "咖啡因",
+          "薄荷"
+        ]
+      },
+      "pros": [
+        "提神",
+        "便宜"
+      ],
+      "cons": [
+        "薄荷刺激",
+        "冬天偏凉"
+      ],
+      "tags": [
+        "清爽",
+        "薄荷",
+        "性价比"
+      ],
+      "image_key": "bw-008"
+    },
+    {
+      "id": "hs-001",
+      "name": "氨基酸控油洗发水",
+      "brand": "清岚",
+      "category": "洗发水",
+      "price": 79,
+      "original_price": 99,
+      "rating": 4.6,
+      "review_count": 3100,
+      "description": "清岚 氨基酸控油洗发水，适合油性发质，主打控油，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "hair_type": "油性",
+        "function": "控油",
+        "scent": "柑橘",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "氨基酸",
+          "吡啶硫酮锌"
+        ]
+      },
+      "pros": [
+        "控油两天",
+        "蓬松",
+        "柑橘香"
+      ],
+      "cons": [
+        "发尾略干"
+      ],
+      "tags": [
+        "油头",
+        "控油",
+        "蓬松"
+      ],
+      "image_key": "hs-001"
+    },
+    {
+      "id": "hs-002",
+      "name": "去屑净爽洗发水",
+      "brand": "沐野",
+      "category": "洗发水",
+      "price": 69,
+      "original_price": 89,
+      "rating": 4.5,
+      "review_count": 4200,
+      "description": "沐野 去屑净爽洗发水，适合油性发质，主打去屑，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "hair_type": "油性",
+        "function": "去屑",
+        "scent": "薄荷",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "吡啶硫酮锌",
+          "薄荷"
+        ]
+      },
+      "pros": [
+        "去屑明显",
+        "清凉"
+      ],
+      "cons": [
+        "薄荷味重"
+      ],
+      "tags": [
+        "去屑",
+        "油头",
+        "薄荷"
+      ],
+      "image_key": "hs-002"
+    },
+    {
+      "id": "hs-003",
+      "name": "敏感头皮修护洗发水",
+      "brand": "简植",
+      "category": "洗发水",
+      "price": 99,
+      "original_price": 119,
+      "rating": 4.7,
+      "review_count": 860,
+      "description": "简植 敏感头皮修护洗发水，适合干性发质，主打修护，400ml。演示数据，非真实商品。",
+      "attributes": {
+        "hair_type": "干性",
+        "function": "修护",
+        "scent": "无香",
+        "volume_ml": 400,
+        "key_ingredients": [
+          "神经酰胺",
+          "泛醇"
+        ]
+      },
+      "pros": [
+        "头皮不痒",
+        "无香",
+        "温和"
+      ],
+      "cons": [
+        "起泡少"
+      ],
+      "tags": [
+        "敏感头皮",
+        "修护",
+        "无香"
+      ],
+      "image_key": "hs-003"
+    },
+    {
+      "id": "hs-004",
+      "name": "海盐蓬松洗发水",
+      "brand": "海屿",
+      "category": "洗发水",
+      "price": 89,
+      "original_price": 109,
+      "rating": 4.4,
+      "review_count": 1900,
+      "description": "海屿 海盐蓬松洗发水，适合中性发质，主打蓬松，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "hair_type": "中性",
+        "function": "蓬松",
+        "scent": "木质",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "海盐",
+          "水解蛋白"
+        ]
+      },
+      "pros": [
+        "蓬松",
+        "海盐香"
+      ],
+      "cons": [
+        "清洁力偏强"
+      ],
+      "tags": [
+        "蓬松",
+        "中性发质"
+      ],
+      "image_key": "hs-004"
+    },
+    {
+      "id": "hs-005",
+      "name": "玻尿酸保湿洗发水",
+      "brand": "初本",
+      "category": "洗发水",
+      "price": 59,
+      "original_price": 79,
+      "rating": 4.3,
+      "review_count": 2800,
+      "description": "初本 玻尿酸保湿洗发水，适合干性发质，主打保湿，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "hair_type": "干性",
+        "function": "保湿",
+        "scent": "花香",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "玻尿酸",
+          "角蛋白"
+        ]
+      },
+      "pros": [
+        "顺滑",
+        "便宜",
+        "花香"
+      ],
+      "cons": [
+        "油头不适用"
+      ],
+      "tags": [
+        "干发",
+        "保湿",
+        "性价比"
+      ],
+      "image_key": "hs-005"
+    },
+    {
+      "id": "hs-006",
+      "name": "咖啡因防脱洗发水",
+      "brand": "研白",
+      "category": "洗发水",
+      "price": 119,
+      "original_price": 149,
+      "rating": 4.2,
+      "review_count": 650,
+      "description": "研白 咖啡因防脱洗发水，适合中性发质，主打修护，300ml。演示数据，非真实商品。",
+      "attributes": {
+        "hair_type": "中性",
+        "function": "修护",
+        "scent": "木质",
+        "volume_ml": 300,
+        "key_ingredients": [
+          "咖啡因",
+          "生姜"
+        ]
+      },
+      "pros": [
+        "掉发减少",
+        "木质香"
+      ],
+      "cons": [
+        "价格高",
+        "效果慢"
+      ],
+      "tags": [
+        "防脱",
+        "修护"
+      ],
+      "image_key": "hs-006"
+    },
+    {
+      "id": "fc-001",
+      "name": "神经酰胺修护面霜",
+      "brand": "简植",
+      "category": "面霜",
+      "price": 129,
+      "original_price": 159,
+      "rating": 4.8,
+      "review_count": 1800,
+      "description": "简植 神经酰胺修护面霜，适合敏感肌，主打修护，50ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "敏感肌",
+        "function": "修护",
+        "texture": "滋润",
+        "volume_ml": 50,
+        "key_ingredients": [
+          "神经酰胺",
+          "角鲨烷"
+        ]
+      },
+      "pros": [
+        "修护泛红",
+        "滋润不腻",
+        "敏感肌友好"
+      ],
+      "cons": [
+        "夏天偏厚"
+      ],
+      "tags": [
+        "敏感肌",
+        "修护",
+        "滋润"
+      ],
+      "image_key": "fc-001"
+    },
+    {
+      "id": "fc-002",
+      "name": "清爽保湿面霜",
+      "brand": "清岚",
+      "category": "面霜",
+      "price": 89,
+      "original_price": 109,
+      "rating": 4.5,
+      "review_count": 2400,
+      "description": "清岚 清爽保湿面霜，适合油性，主打保湿，50ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "油性",
+        "function": "保湿",
+        "texture": "清爽",
+        "volume_ml": 50,
+        "key_ingredients": [
+          "玻尿酸",
+          "甘油"
+        ]
+      },
+      "pros": [
+        "清爽",
+        "不搓泥",
+        "妆前可用"
+      ],
+      "cons": [
+        "冬天保湿不够"
+      ],
+      "tags": [
+        "油皮",
+        "清爽",
+        "保湿"
+      ],
+      "image_key": "fc-002"
+    },
+    {
+      "id": "fc-003",
+      "name": "烟酰胺提亮面霜",
+      "brand": "研白",
+      "category": "面霜",
+      "price": 149,
+      "original_price": 189,
+      "rating": 4.4,
+      "review_count": 920,
+      "description": "研白 烟酰胺提亮面霜，适合中性，主打美白，50ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "中性",
+        "function": "美白",
+        "texture": "清爽",
+        "volume_ml": 50,
+        "key_ingredients": [
+          "烟酰胺",
+          "VC"
+        ]
+      },
+      "pros": [
+        "提亮",
+        "质地轻盈"
+      ],
+      "cons": [
+        "需建立耐受",
+        "敏感肌慎用"
+      ],
+      "tags": [
+        "美白",
+        "提亮"
+      ],
+      "image_key": "fc-003"
+    },
+    {
+      "id": "fc-004",
+      "name": "玻尿酸水润面霜",
+      "brand": "云栖",
+      "category": "面霜",
+      "price": 69,
+      "original_price": 89,
+      "rating": 4.3,
+      "review_count": 3600,
+      "description": "云栖 玻尿酸水润面霜，适合干性，主打保湿，50ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "干性",
+        "function": "保湿",
+        "texture": "滋润",
+        "volume_ml": 50,
+        "key_ingredients": [
+          "玻尿酸",
+          "泛醇"
+        ]
+      },
+      "pros": [
+        "便宜",
+        "补水明显"
+      ],
+      "cons": [
+        "香精味"
+      ],
+      "tags": [
+        "干皮",
+        "保湿",
+        "性价比"
+      ],
+      "image_key": "fc-004"
+    },
+    {
+      "id": "fc-005",
+      "name": "海藻舒缓面霜",
+      "brand": "海屿",
+      "category": "面霜",
+      "price": 159,
+      "original_price": 199,
+      "rating": 4.6,
+      "review_count": 540,
+      "description": "海屿 海藻舒缓面霜，适合敏感肌，主打修护，50ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "敏感肌",
+        "function": "修护",
+        "texture": "清爽",
+        "volume_ml": 50,
+        "key_ingredients": [
+          "海藻",
+          "积雪草"
+        ]
+      },
+      "pros": [
+        "舒缓",
+        "清爽",
+        "海洋香"
+      ],
+      "cons": [
+        "价格高",
+        "评价少"
+      ],
+      "tags": [
+        "敏感肌",
+        "舒缓"
+      ],
+      "image_key": "fc-005"
+    },
+    {
+      "id": "fc-006",
+      "name": "视黄醇抗初老面霜",
+      "brand": "沐野",
+      "category": "面霜",
+      "price": 199,
+      "original_price": 239,
+      "rating": 4.1,
+      "review_count": 310,
+      "description": "沐野 视黄醇抗初老面霜，适合中性，主打抗老，50ml。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "中性",
+        "function": "抗老",
+        "texture": "滋润",
+        "volume_ml": 50,
+        "key_ingredients": [
+          "视黄醇",
+          "胜肽"
+        ]
+      },
+      "pros": [
+        "细纹改善"
+      ],
+      "cons": [
+        "刺激",
+        "需避光",
+        "评价少"
+      ],
+      "tags": [
+        "抗老",
+        "视黄醇"
+      ],
+      "image_key": "fc-006"
+    },
+    {
+      "id": "fs-001",
+      "name": "轻透防晒乳",
+      "brand": "清岚",
+      "category": "防晒霜",
+      "price": 99,
+      "original_price": 129,
+      "rating": 4.6,
+      "review_count": 2800,
+      "description": "清岚 轻透防晒乳，适合敏感肌，50ml，SPF50 PA++++。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "敏感肌",
+        "texture": "清爽",
+        "volume_ml": 50,
+        "spf": 50,
+        "pa": "++++",
+        "key_ingredients": [
+          "氧化锌",
+          "烟酰胺"
+        ]
+      },
+      "pros": [
+        "不假白",
+        "成膜快",
+        "敏感肌可用"
+      ],
+      "cons": [
+        "需卸妆"
+      ],
+      "tags": [
+        "敏感肌",
+        "清爽",
+        "SPF50"
+      ],
+      "image_key": "fs-001"
+    },
+    {
+      "id": "fs-002",
+      "name": "控油防晒霜",
+      "brand": "沐野",
+      "category": "防晒霜",
+      "price": 79,
+      "original_price": 99,
+      "rating": 4.4,
+      "review_count": 1900,
+      "description": "沐野 控油防晒霜，适合油性，50ml，SPF50 PA+++。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "油性",
+        "texture": "清爽",
+        "volume_ml": 50,
+        "spf": 50,
+        "pa": "+++",
+        "key_ingredients": [
+          "水杨酸",
+          "硅石"
+        ]
+      },
+      "pros": [
+        "控油",
+        "哑光"
+      ],
+      "cons": [
+        "略搓泥"
+      ],
+      "tags": [
+        "油皮",
+        "控油",
+        "SPF50"
+      ],
+      "image_key": "fs-002"
+    },
+    {
+      "id": "fs-003",
+      "name": "物理防晒乳",
+      "brand": "简植",
+      "category": "防晒霜",
+      "price": 119,
+      "original_price": 139,
+      "rating": 4.7,
+      "review_count": 760,
+      "description": "简植 物理防晒乳，适合敏感肌，40ml，SPF30 PA+++。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "敏感肌",
+        "texture": "滋润",
+        "volume_ml": 40,
+        "spf": 30,
+        "pa": "+++",
+        "key_ingredients": [
+          "氧化锌",
+          "二氧化钛"
+        ]
+      },
+      "pros": [
+        "纯物理",
+        "温和",
+        "孕妇可用"
+      ],
+      "cons": [
+        "略泛白",
+        "价格高"
+      ],
+      "tags": [
+        "敏感肌",
+        "物理防晒",
+        "SPF30"
+      ],
+      "image_key": "fs-003"
+    },
+    {
+      "id": "fs-004",
+      "name": "水感防晒喷雾",
+      "brand": "海屿",
+      "category": "防晒霜",
+      "price": 69,
+      "original_price": 89,
+      "rating": 4.2,
+      "review_count": 4100,
+      "description": "海屿 水感防晒喷雾，适合中性，150ml，SPF50 PA++++。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "中性",
+        "texture": "清爽",
+        "volume_ml": 150,
+        "spf": 50,
+        "pa": "++++",
+        "key_ingredients": [
+          "化学防晒剂"
+        ]
+      },
+      "pros": [
+        "方便补涂",
+        "清爽"
+      ],
+      "cons": [
+        "喷雾不均匀",
+        "不能上飞机"
+      ],
+      "tags": [
+        "喷雾",
+        "清爽",
+        "SPF50"
+      ],
+      "image_key": "fs-004"
+    },
+    {
+      "id": "fs-005",
+      "name": "儿童防晒霜",
+      "brand": "云栖",
+      "category": "防晒霜",
+      "price": 89,
+      "original_price": 109,
+      "rating": 4.8,
+      "review_count": 1200,
+      "description": "云栖 儿童防晒霜，适合敏感肌，50ml，SPF30 PA+++。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "敏感肌",
+        "texture": "滋润",
+        "volume_ml": 50,
+        "spf": 30,
+        "pa": "+++",
+        "key_ingredients": [
+          "氧化锌",
+          "燕麦"
+        ]
+      },
+      "pros": [
+        "儿童可用",
+        "温和",
+        "无香"
+      ],
+      "cons": [
+        "泛白",
+        "质地厚"
+      ],
+      "tags": [
+        "儿童",
+        "敏感肌",
+        "SPF30"
+      ],
+      "image_key": "fs-005"
+    },
+    {
+      "id": "fs-006",
+      "name": "美白防晒乳",
+      "brand": "研白",
+      "category": "防晒霜",
+      "price": 129,
+      "original_price": 159,
+      "rating": 4.3,
+      "review_count": 880,
+      "description": "研白 美白防晒乳，适合中性，50ml，SPF50 PA++++。演示数据，非真实商品。",
+      "attributes": {
+        "skin_type": "中性",
+        "texture": "清爽",
+        "volume_ml": 50,
+        "spf": 50,
+        "pa": "++++",
+        "key_ingredients": [
+          "烟酰胺",
+          "VC"
+        ]
+      },
+      "pros": [
+        "提亮",
+        "不油腻"
+      ],
+      "cons": [
+        "敏感肌刺痛"
+      ],
+      "tags": [
+        "美白",
+        "SPF50"
+      ],
+      "image_key": "fs-006"
+    },
+    {
+      "id": "tp-001",
+      "name": "抗敏修护牙膏",
+      "brand": "清岚",
+      "category": "牙膏",
+      "price": 39,
+      "original_price": 49,
+      "rating": 4.6,
+      "review_count": 3200,
+      "description": "清岚 抗敏修护牙膏，主打抗敏，120ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "抗敏",
+        "flavor": "薄荷",
+        "volume_ml": 120,
+        "key_ingredients": [
+          "硝酸钾",
+          "氟化钠"
+        ]
+      },
+      "pros": [
+        "抗敏明显",
+        "泡沫适中"
+      ],
+      "cons": [
+        "薄荷偏辣"
+      ],
+      "tags": [
+        "抗敏",
+        "薄荷"
+      ],
+      "image_key": "tp-001"
+    },
+    {
+      "id": "tp-002",
+      "name": "美白去渍牙膏",
+      "brand": "沐野",
+      "category": "牙膏",
+      "price": 29,
+      "original_price": 39,
+      "rating": 4.3,
+      "review_count": 5600,
+      "description": "沐野 美白去渍牙膏，主打美白，120ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "美白",
+        "flavor": "薄荷",
+        "volume_ml": 120,
+        "key_ingredients": [
+          "水合硅石",
+          "焦磷酸盐"
+        ]
+      },
+      "pros": [
+        "去茶渍",
+        "便宜"
+      ],
+      "cons": [
+        "敏感牙酸痛"
+      ],
+      "tags": [
+        "美白",
+        "去渍",
+        "性价比"
+      ],
+      "image_key": "tp-002"
+    },
+    {
+      "id": "tp-003",
+      "name": "益生菌清新牙膏",
+      "brand": "简植",
+      "category": "牙膏",
+      "price": 49,
+      "original_price": 59,
+      "rating": 4.5,
+      "review_count": 1400,
+      "description": "简植 益生菌清新牙膏，主打清新，100ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "清新",
+        "flavor": "蜜桃",
+        "volume_ml": 100,
+        "key_ingredients": [
+          "益生菌",
+          "木糖醇"
+        ]
+      },
+      "pros": [
+        "口气清新",
+        "蜜桃味"
+      ],
+      "cons": [
+        "泡沫少"
+      ],
+      "tags": [
+        "清新",
+        "蜜桃"
+      ],
+      "image_key": "tp-003"
+    },
+    {
+      "id": "tp-004",
+      "name": "儿童防蛀牙膏",
+      "brand": "云栖",
+      "category": "牙膏",
+      "price": 35,
+      "original_price": 45,
+      "rating": 4.8,
+      "review_count": 2100,
+      "description": "云栖 儿童防蛀牙膏，主打防蛀，60ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "防蛀",
+        "flavor": "蜜桃",
+        "volume_ml": 60,
+        "key_ingredients": [
+          "氟化钠",
+          "木糖醇"
+        ]
+      },
+      "pros": [
+        "儿童喜欢",
+        "低氟安全"
+      ],
+      "cons": [
+        "容量小"
+      ],
+      "tags": [
+        "儿童",
+        "防蛀",
+        "蜜桃"
+      ],
+      "image_key": "tp-004"
+    },
+    {
+      "id": "tp-005",
+      "name": "酵素亮白牙膏",
+      "brand": "研白",
+      "category": "牙膏",
+      "price": 59,
+      "original_price": 69,
+      "rating": 4.1,
+      "review_count": 780,
+      "description": "研白 酵素亮白牙膏，主打美白，100ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "美白",
+        "flavor": "绿茶",
+        "volume_ml": 100,
+        "key_ingredients": [
+          "酵素",
+          "绿茶提取物"
+        ]
+      },
+      "pros": [
+        "温和",
+        "绿茶味"
+      ],
+      "cons": [
+        "美白慢",
+        "价格高"
+      ],
+      "tags": [
+        "美白",
+        "绿茶"
+      ],
+      "image_key": "tp-005"
+    },
+    {
+      "id": "ld-001",
+      "name": "除菌洗衣液",
+      "brand": "清岚",
+      "category": "洗衣液",
+      "price": 59,
+      "original_price": 79,
+      "rating": 4.7,
+      "review_count": 4800,
+      "description": "清岚 除菌洗衣液，主打除菌，3000ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "除菌",
+        "scent": "花香",
+        "volume_ml": 3000,
+        "key_ingredients": [
+          "除菌因子",
+          "酶"
+        ]
+      },
+      "pros": [
+        "除菌",
+        "留香",
+        "便宜"
+      ],
+      "cons": [
+        "花香偏浓"
+      ],
+      "tags": [
+        "除菌",
+        "花香",
+        "大容量"
+      ],
+      "image_key": "ld-001"
+    },
+    {
+      "id": "ld-002",
+      "name": "婴童洗衣液",
+      "brand": "沐野",
+      "category": "洗衣液",
+      "price": 79,
+      "original_price": 99,
+      "rating": 4.8,
+      "review_count": 2300,
+      "description": "沐野 婴童洗衣液，主打除菌，2000ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "除菌",
+        "scent": "无香",
+        "volume_ml": 2000,
+        "key_ingredients": [
+          "氨基酸表面活性剂"
+        ]
+      },
+      "pros": [
+        "婴童可用",
+        "无香",
+        "温和"
+      ],
+      "cons": [
+        "价格偏高"
+      ],
+      "tags": [
+        "婴童",
+        "无香",
+        "温和"
+      ],
+      "image_key": "ld-002"
+    },
+    {
+      "id": "ld-003",
+      "name": "留香洗衣液",
+      "brand": "简植",
+      "category": "洗衣液",
+      "price": 49,
+      "original_price": 69,
+      "rating": 4.4,
+      "review_count": 3600,
+      "description": "简植 留香洗衣液，主打留香，3000ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "留香",
+        "scent": "花香",
+        "volume_ml": 3000,
+        "key_ingredients": [
+          "香氛微胶囊"
+        ]
+      },
+      "pros": [
+        "留香久",
+        "便宜"
+      ],
+      "cons": [
+        "香味浓"
+      ],
+      "tags": [
+        "留香",
+        "花香",
+        "性价比"
+      ],
+      "image_key": "ld-003"
+    },
+    {
+      "id": "ld-004",
+      "name": "运动衣物洗衣液",
+      "brand": "海屿",
+      "category": "洗衣液",
+      "price": 69,
+      "original_price": 89,
+      "rating": 4.5,
+      "review_count": 1100,
+      "description": "海屿 运动衣物洗衣液，主打除菌，2000ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "除菌",
+        "scent": "木质",
+        "volume_ml": 2000,
+        "key_ingredients": [
+          "酶",
+          "除菌因子"
+        ]
+      },
+      "pros": [
+        "去汗味",
+        "木质香"
+      ],
+      "cons": [
+        "去油一般"
+      ],
+      "tags": [
+        "运动",
+        "除菌",
+        "木质"
+      ],
+      "image_key": "ld-004"
+    },
+    {
+      "id": "ld-005",
+      "name": "内衣专用洗衣液",
+      "brand": "云栖",
+      "category": "洗衣液",
+      "price": 45,
+      "original_price": 59,
+      "rating": 4.6,
+      "review_count": 900,
+      "description": "云栖 内衣专用洗衣液，主打除菌，500ml。演示数据，非真实商品。",
+      "attributes": {
+        "function": "除菌",
+        "scent": "无香",
+        "volume_ml": 500,
+        "key_ingredients": [
+          "蛋白酶",
+          "茶树"
+        ]
+      },
+      "pros": [
+        "内衣专用",
+        "无香",
+        "温和"
+      ],
+      "cons": [
+        "容量小"
+      ],
+      "tags": [
+        "内衣",
+        "无香",
+        "除菌"
+      ],
+      "image_key": "ld-005"
+    }
+  ],
+  "reviews": [
+    {
+      "product_id": "bw-001",
+      "rating": 5,
+      "content": "洗后不紧绷，泡沫细腻，会回购。",
+      "author": "小*"
+    },
+    {
+      "product_id": "bw-001",
+      "rating": 4,
+      "content": "整体不错，洗后不紧绷；如果能改进泵头偏紧就更好了。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "bw-001",
+      "rating": 3,
+      "content": "泵头偏紧，可能不适合我。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "bw-002",
+      "rating": 5,
+      "content": "清爽，控油持久，会回购。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "bw-002",
+      "rating": 4,
+      "content": "整体不错，清爽；如果能改进干皮会紧绷就更好了。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "bw-002",
+      "rating": 3,
+      "content": "干皮会紧绷，可能不适合我。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "bw-003",
+      "rating": 5,
+      "content": "修护屏障，温和，会回购。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "bw-003",
+      "rating": 4,
+      "content": "整体不错，修护屏障；如果能改进价格偏高就更好了。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "bw-003",
+      "rating": 3,
+      "content": "价格偏高，可能不适合我。",
+      "author": "木*"
+    },
+    {
+      "product_id": "bw-004",
+      "rating": 5,
+      "content": "磨砂细腻，香味高级，会回购。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "bw-004",
+      "rating": 4,
+      "content": "整体不错，磨砂细腻；如果能改进敏感肌慎用就更好了。",
+      "author": "木*"
+    },
+    {
+      "product_id": "bw-004",
+      "rating": 3,
+      "content": "敏感肌慎用，可能不适合我。",
+      "author": "小*"
+    },
+    {
+      "product_id": "bw-005",
+      "rating": 5,
+      "content": "便宜大碗，泡沫丰富，会回购。",
+      "author": "木*"
+    },
+    {
+      "product_id": "bw-005",
+      "rating": 4,
+      "content": "整体不错，便宜大碗；如果能改进留香一般就更好了。",
+      "author": "小*"
+    },
+    {
+      "product_id": "bw-005",
+      "rating": 3,
+      "content": "留香一般，可能不适合我。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "bw-006",
+      "rating": 5,
+      "content": "去鸡皮，果香清新，会回购。",
+      "author": "小*"
+    },
+    {
+      "product_id": "bw-006",
+      "rating": 4,
+      "content": "整体不错，去鸡皮；如果能改进需要防晒就更好了。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "bw-006",
+      "rating": 3,
+      "content": "需要防晒，可能不适合我。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "bw-007",
+      "rating": 5,
+      "content": "婴儿可用，无泪配方，会回购。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "bw-007",
+      "rating": 4,
+      "content": "整体不错，婴儿可用；如果能改进清洁力偏弱就更好了。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "bw-007",
+      "rating": 3,
+      "content": "清洁力偏弱，可能不适合我。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "bw-008",
+      "rating": 5,
+      "content": "提神，便宜，会回购。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "bw-008",
+      "rating": 4,
+      "content": "整体不错，提神；如果能改进薄荷刺激就更好了。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "bw-008",
+      "rating": 3,
+      "content": "薄荷刺激，可能不适合我。",
+      "author": "木*"
+    },
+    {
+      "product_id": "hs-001",
+      "rating": 5,
+      "content": "控油两天，蓬松，会回购。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "hs-001",
+      "rating": 4,
+      "content": "整体不错，控油两天；如果能改进发尾略干就更好了。",
+      "author": "木*"
+    },
+    {
+      "product_id": "hs-001",
+      "rating": 3,
+      "content": "发尾略干，可能不适合我。",
+      "author": "小*"
+    },
+    {
+      "product_id": "hs-002",
+      "rating": 5,
+      "content": "去屑明显，清凉，会回购。",
+      "author": "木*"
+    },
+    {
+      "product_id": "hs-002",
+      "rating": 4,
+      "content": "整体不错，去屑明显；如果能改进薄荷味重就更好了。",
+      "author": "小*"
+    },
+    {
+      "product_id": "hs-002",
+      "rating": 3,
+      "content": "薄荷味重，可能不适合我。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "hs-003",
+      "rating": 5,
+      "content": "头皮不痒，无香，会回购。",
+      "author": "小*"
+    },
+    {
+      "product_id": "hs-003",
+      "rating": 4,
+      "content": "整体不错，头皮不痒；如果能改进起泡少就更好了。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "hs-003",
+      "rating": 3,
+      "content": "起泡少，可能不适合我。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "hs-004",
+      "rating": 5,
+      "content": "蓬松，海盐香，会回购。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "hs-004",
+      "rating": 4,
+      "content": "整体不错，蓬松；如果能改进清洁力偏强就更好了。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "hs-004",
+      "rating": 3,
+      "content": "清洁力偏强，可能不适合我。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "hs-005",
+      "rating": 5,
+      "content": "顺滑，便宜，会回购。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "hs-005",
+      "rating": 4,
+      "content": "整体不错，顺滑；如果能改进油头不适用就更好了。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "hs-005",
+      "rating": 3,
+      "content": "油头不适用，可能不适合我。",
+      "author": "木*"
+    },
+    {
+      "product_id": "hs-006",
+      "rating": 5,
+      "content": "掉发减少，木质香，会回购。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "hs-006",
+      "rating": 4,
+      "content": "整体不错，掉发减少；如果能改进价格高就更好了。",
+      "author": "木*"
+    },
+    {
+      "product_id": "hs-006",
+      "rating": 3,
+      "content": "价格高，可能不适合我。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fc-001",
+      "rating": 5,
+      "content": "修护泛红，滋润不腻，会回购。",
+      "author": "木*"
+    },
+    {
+      "product_id": "fc-001",
+      "rating": 4,
+      "content": "整体不错，修护泛红；如果能改进夏天偏厚就更好了。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fc-001",
+      "rating": 3,
+      "content": "夏天偏厚，可能不适合我。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "fc-002",
+      "rating": 5,
+      "content": "清爽，不搓泥，会回购。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fc-002",
+      "rating": 4,
+      "content": "整体不错，清爽；如果能改进冬天保湿不够就更好了。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "fc-002",
+      "rating": 3,
+      "content": "冬天保湿不够，可能不适合我。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "fc-003",
+      "rating": 5,
+      "content": "提亮，质地轻盈，会回购。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "fc-003",
+      "rating": 4,
+      "content": "整体不错，提亮；如果能改进需建立耐受就更好了。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "fc-003",
+      "rating": 3,
+      "content": "需建立耐受，可能不适合我。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "fc-004",
+      "rating": 5,
+      "content": "便宜，补水明显，会回购。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "fc-004",
+      "rating": 4,
+      "content": "整体不错，便宜；如果能改进香精味就更好了。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "fc-004",
+      "rating": 3,
+      "content": "香精味，可能不适合我。",
+      "author": "木*"
+    },
+    {
+      "product_id": "fc-005",
+      "rating": 5,
+      "content": "舒缓，清爽，会回购。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "fc-005",
+      "rating": 4,
+      "content": "整体不错，舒缓；如果能改进价格高就更好了。",
+      "author": "木*"
+    },
+    {
+      "product_id": "fc-005",
+      "rating": 3,
+      "content": "价格高，可能不适合我。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fc-006",
+      "rating": 5,
+      "content": "细纹改善，整体满意，会回购。",
+      "author": "木*"
+    },
+    {
+      "product_id": "fc-006",
+      "rating": 4,
+      "content": "整体不错，细纹改善；如果能改进刺激就更好了。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fc-006",
+      "rating": 3,
+      "content": "刺激，可能不适合我。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "fs-001",
+      "rating": 5,
+      "content": "不假白，成膜快，会回购。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fs-001",
+      "rating": 4,
+      "content": "整体不错，不假白；如果能改进需卸妆就更好了。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "fs-001",
+      "rating": 3,
+      "content": "需卸妆，可能不适合我。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "fs-002",
+      "rating": 5,
+      "content": "控油，哑光，会回购。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "fs-002",
+      "rating": 4,
+      "content": "整体不错，控油；如果能改进略搓泥就更好了。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "fs-002",
+      "rating": 3,
+      "content": "略搓泥，可能不适合我。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "fs-003",
+      "rating": 5,
+      "content": "纯物理，温和，会回购。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "fs-003",
+      "rating": 4,
+      "content": "整体不错，纯物理；如果能改进略泛白就更好了。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "fs-003",
+      "rating": 3,
+      "content": "略泛白，可能不适合我。",
+      "author": "木*"
+    },
+    {
+      "product_id": "fs-004",
+      "rating": 5,
+      "content": "方便补涂，清爽，会回购。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "fs-004",
+      "rating": 4,
+      "content": "整体不错，方便补涂；如果能改进喷雾不均匀就更好了。",
+      "author": "木*"
+    },
+    {
+      "product_id": "fs-004",
+      "rating": 3,
+      "content": "喷雾不均匀，可能不适合我。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fs-005",
+      "rating": 5,
+      "content": "儿童可用，温和，会回购。",
+      "author": "木*"
+    },
+    {
+      "product_id": "fs-005",
+      "rating": 4,
+      "content": "整体不错，儿童可用；如果能改进泛白就更好了。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fs-005",
+      "rating": 3,
+      "content": "泛白，可能不适合我。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "fs-006",
+      "rating": 5,
+      "content": "提亮，不油腻，会回购。",
+      "author": "小*"
+    },
+    {
+      "product_id": "fs-006",
+      "rating": 4,
+      "content": "整体不错，提亮；如果能改进敏感肌刺痛就更好了。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "fs-006",
+      "rating": 3,
+      "content": "敏感肌刺痛，可能不适合我。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "tp-001",
+      "rating": 5,
+      "content": "抗敏明显，泡沫适中，会回购。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "tp-001",
+      "rating": 4,
+      "content": "整体不错，抗敏明显；如果能改进薄荷偏辣就更好了。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "tp-001",
+      "rating": 3,
+      "content": "薄荷偏辣，可能不适合我。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "tp-002",
+      "rating": 5,
+      "content": "去茶渍，便宜，会回购。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "tp-002",
+      "rating": 4,
+      "content": "整体不错，去茶渍；如果能改进敏感牙酸痛就更好了。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "tp-002",
+      "rating": 3,
+      "content": "敏感牙酸痛，可能不适合我。",
+      "author": "木*"
+    },
+    {
+      "product_id": "tp-003",
+      "rating": 5,
+      "content": "口气清新，蜜桃味，会回购。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "tp-003",
+      "rating": 4,
+      "content": "整体不错，口气清新；如果能改进泡沫少就更好了。",
+      "author": "木*"
+    },
+    {
+      "product_id": "tp-003",
+      "rating": 3,
+      "content": "泡沫少，可能不适合我。",
+      "author": "小*"
+    },
+    {
+      "product_id": "tp-004",
+      "rating": 5,
+      "content": "儿童喜欢，低氟安全，会回购。",
+      "author": "木*"
+    },
+    {
+      "product_id": "tp-004",
+      "rating": 4,
+      "content": "整体不错，儿童喜欢；如果能改进容量小就更好了。",
+      "author": "小*"
+    },
+    {
+      "product_id": "tp-004",
+      "rating": 3,
+      "content": "容量小，可能不适合我。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "tp-005",
+      "rating": 5,
+      "content": "温和，绿茶味，会回购。",
+      "author": "小*"
+    },
+    {
+      "product_id": "tp-005",
+      "rating": 4,
+      "content": "整体不错，温和；如果能改进美白慢就更好了。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "tp-005",
+      "rating": 3,
+      "content": "美白慢，可能不适合我。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "ld-001",
+      "rating": 5,
+      "content": "除菌，留香，会回购。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "ld-001",
+      "rating": 4,
+      "content": "整体不错，除菌；如果能改进花香偏浓就更好了。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "ld-001",
+      "rating": 3,
+      "content": "花香偏浓，可能不适合我。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "ld-002",
+      "rating": 5,
+      "content": "婴童可用，无香，会回购。",
+      "author": "匿*"
+    },
+    {
+      "product_id": "ld-002",
+      "rating": 4,
+      "content": "整体不错，婴童可用；如果能改进价格偏高就更好了。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "ld-002",
+      "rating": 3,
+      "content": "价格偏高，可能不适合我。",
+      "author": "木*"
+    },
+    {
+      "product_id": "ld-003",
+      "rating": 5,
+      "content": "留香久，便宜，会回购。",
+      "author": "阿*"
+    },
+    {
+      "product_id": "ld-003",
+      "rating": 4,
+      "content": "整体不错，留香久；如果能改进香味浓就更好了。",
+      "author": "木*"
+    },
+    {
+      "product_id": "ld-003",
+      "rating": 3,
+      "content": "香味浓，可能不适合我。",
+      "author": "小*"
+    },
+    {
+      "product_id": "ld-004",
+      "rating": 5,
+      "content": "去汗味，木质香，会回购。",
+      "author": "木*"
+    },
+    {
+      "product_id": "ld-004",
+      "rating": 4,
+      "content": "整体不错，去汗味；如果能改进去油一般就更好了。",
+      "author": "小*"
+    },
+    {
+      "product_id": "ld-004",
+      "rating": 3,
+      "content": "去油一般，可能不适合我。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "ld-005",
+      "rating": 5,
+      "content": "内衣专用，无香，会回购。",
+      "author": "小*"
+    },
+    {
+      "product_id": "ld-005",
+      "rating": 4,
+      "content": "整体不错，内衣专用；如果能改进容量小就更好了。",
+      "author": "用户****"
+    },
+    {
+      "product_id": "ld-005",
+      "rating": 3,
+      "content": "容量小，可能不适合我。",
+      "author": "匿*"
+    }
+  ]
+}
