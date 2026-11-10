@@ -5,7 +5,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 await page.goto(BASE, { waitUntil: "networkidle" });
 await page
     .locator("main")
-    .getByRole("button", { name: /我想买一瓶沐浴露/ })
+    .getByRole("button", { name: /我想买洗发水/ })
     .first()
     .click();
 await page
@@ -39,7 +39,7 @@ console.log("orders UI ok");
 await dialog.getByRole("button", { name: "Write a review" }).click();
 await page
     .getByPlaceholder("Write your experience…")
-    .fill("Used it for two weeks. No irritation on sensitive skin, the scent is very light, and I would buy it again. The pump is a bit stiff.");
+    .fill("Used it for two weeks. It cleans well and reduces dandruff, and the scent is light. The bottle pump is a bit stiff.");
 await page.getByRole("button", { name: "Submit review" }).click();
 await page.getByText("Review submitted").waitFor({ timeout: 60000 });
 await page.screenshot({ path: "../docs/assets/review-success.png" });
@@ -50,7 +50,7 @@ await dialog.getByRole("button", { name: "Edit review" }).click();
 await page.getByRole("button", { name: "Rating 4" }).click();
 await page
     .getByPlaceholder("Write your experience…")
-    .fill("Used it for a month. Still gentle, light scent, but the pump is still stiff.");
+    .fill("Used it for a month. Still reduces dandruff, light scent, but the pump is still stiff.");
 await page.getByRole("button", { name: "Save changes" }).click();
 await page.getByText("Review updated").waitFor({ timeout: 60000 });
 await page.getByRole("button", { name: "Done" }).click();
@@ -70,8 +70,9 @@ const sellerDialog = page.getByRole("dialog");
 await sellerDialog.getByText("List my product").waitFor({ timeout: 15000 });
 await sellerDialog
     .getByPlaceholder(/For example: a 500ml amino-acid body wash/)
-    .fill("Demo Shop amino-acid body wash, 500ml, suitable for sensitive skin, fragrance-free, gentle foam, ¥59. The pump is a little stiff.");
+    .fill("Demo Shop anti-dandruff shampoo, 400ml, for oily scalps, reduces dandruff, fresh scent, ¥59. The pump is a little stiff.");
 await sellerDialog.locator('input[type="number"]').fill("59");
+await sellerDialog.locator("select").selectOption("洗发水");
 await sellerDialog
     .getByPlaceholder("Independent seller / your brand")
     .fill("Demo Shop");

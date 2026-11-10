@@ -11,7 +11,7 @@ await page.goto(BASE, { waitUntil: "networkidle" });
 await page.screenshot({ path: `${OUT}/home.png` });
 const prompt = page
     .locator("main")
-    .getByRole("button", { name: /我想买一瓶沐浴露/ })
+    .getByRole("button", { name: /我想买洗发水/ })
     .first();
 await prompt.click();
 await page

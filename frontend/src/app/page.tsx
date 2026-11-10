@@ -13,7 +13,7 @@ import { buildHistoryResponse } from "@/lib/history";
 import type { ChatResponse, PurchaseProposal, ScoredProduct, SessionSummary, ShoppingIntent, StreamStage, UiMessage, } from "@/lib/types";
 const USER_ID = "demo-user";
 const DEMO_PROMPTS = [
-    "我想买一瓶沐浴露，预算 100 以内，敏感肌，最好没有香味",
+    "我想买洗发水，预算 100 以内，可以去除头屑",
     "油头，想要控油蓬松的洗发水，评分 4.5 以上",
     "给敏感肌找一款 150 元以内的修护面霜",
     "想买防晒，SPF50，清爽不油腻，预算 120",
