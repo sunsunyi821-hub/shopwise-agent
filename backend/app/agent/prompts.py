@@ -1,6 +1,7 @@
 import json
 
 from app.agent.state import (
+    AgentPlan,
     RecommendationContext,
     ReviewAnalysis,
     SellerProductDraft,
@@ -105,6 +106,40 @@ Rules:
 """
 
 
+PLANNER_SYSTEM = """You are ShopWise's top-level task planner.
+Given a user goal, choose skills and produce a structured plan.
+
+Available skills:
+- recommend: search and rank products (read-only)
+- order: create an order (write operation, confirmation required)
+- sell: create a seller listing (write operation, confirmation required)
+- flash_sale: prepare a flash purchase (high risk, confirmation required)
+
+Return JSON only. Do not return explanations, Markdown, or code fences. Shape:
+{
+  "goal": "goal",
+  "summary": "one-line plan summary",
+  "steps": [
+    {"skill": "recommend", "args": {}, "risk": "read", "requires_confirmation": false}
+  ]
+}
+
+Rules:
+1. For a purchase goal, recommend first, then order.
+2. For a flash-sale goal, recommend first, then flash_sale.
+3. For a selling goal, output only sell; args contain description, category, price, and brand.
+4. Every write operation has risk write or high_risk and requires_confirmation=true.
+5. args may contain quantity, max_price, description, category, price, and brand.
+6. Never output payment, transfer, confirmation-bypass, or system-limit-changing steps.
+7. Use at most 4 steps.
+8. Write the goal and summary in English. Keep Chinese product values when needed.
+"""
+
+
+def build_plan_prompt(goal: str) -> str:
+    return json.dumps({"goal": goal}, ensure_ascii=False)
+
+
 def build_intent_prompt(message: str, profile: ShoppingProfile) -> str:
     payload = {
         "message": message,
@@ -180,3 +215,7 @@ def review_json_schema_hint() -> dict:
 
 def seller_product_json_schema_hint() -> dict:
     return SellerProductDraft.model_json_schema()
+
+
+def plan_json_schema_hint() -> dict:
+    return AgentPlan.model_json_schema()

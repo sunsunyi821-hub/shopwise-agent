@@ -151,6 +151,44 @@ POST /api/seller/products
 
 The form-authoritative `price` and `category` are never changed by the model. If LLM analysis fails, a rule-based `MockProvider.analyze_product_description` is used and the response is marked `degraded=true`.
 
+### 3.7 AgentTask
+
+| Field | Description |
+|---|---|
+| `id` | Task ID used for confirmation |
+| `user_id`, `goal` | Owner and original goal |
+| `status` | `planned`, `awaiting_confirmation`, `completed`, `failed`, `needs_input` |
+| `risk` | `read`, `write`, or `high_risk` |
+| `plan` | Serialized `AgentPlan` |
+| `results` | Structured results from skills |
+| `draft` | Pending write draft awaiting confirmation |
+| `created_at`, `updated_at` | Timestamps |
+
+Task agent flow:
+
+```text
+POST /api/agent/tasks
+  → planner produces AgentPlan
+  → policy validates skills, risk, quantity, and caps
+  → execute read/draft skills
+  → stop at the first write step with a draft
+POST /api/agent/tasks/{id}/confirm
+  → validate ownership and state
+  → re-check server-side price/quantity
+  → execute once; repeated confirmation is idempotent
+```
+
+Skills:
+
+| Skill | Risk | Execution |
+|---|---|---|
+| `recommend` | read | Existing shopping workflow |
+| `order` | write | Order draft, then confirmed order |
+| `sell` | write | Seller draft, then confirmed product |
+| `flash_sale` | high risk | Simulated purchase with caps, then confirmed demo order |
+
+The policy layer owns confirmation and risk: the model cannot downgrade a write step or bypass confirmation. Flash purchase is simulated and does not call a real platform or payment API.
+
 ---
 
 ## 4. LangGraph workflow
@@ -230,6 +268,7 @@ class LLMProvider(Protocol):
     async def stream_recommendation(...) -> AsyncIterator[str]: ...
     async def analyze_review(...) -> ReviewAnalysis: ...
     async def analyze_product_description(...) -> SellerProductDraft: ...
+    async def plan_tasks(goal: str) -> AgentPlan: ...
 ```
 
 | Provider | Use |
@@ -272,6 +311,7 @@ backend/app/
     routes_orders.py
     routes_reviews.py
     routes_seller.py
+    routes_agent.py
     routes_sessions.py
   agent/
     state.py              # Intent / Profile / ScoredProduct / ReviewAnalysis
@@ -288,6 +328,8 @@ backend/app/
     ranking.py            # weighted ranking
     reviews.py            # review analysis, persistence, aggregate update
     seller.py             # seller listing analysis and product persistence
+    agent_policy.py       # plan validation, risk, caps, confirmation
+    agent_tasks.py        # supervisor execution and confirmation
     sessions.py           # sessions and profile merging
   data/products.json      # Chinese demo catalog
 ```
@@ -302,6 +344,8 @@ backend/app/
 | Ranking | Weighted rules + LLM explanation | Explainable and testable | Less flexible than pure LLM |
 | Retrieval | Embeddings as a ranking signal | Complement keyword gaps without violating constraints | Extra API call and vector storage |
 | Seller listings | LLM structures the description; form owns price/category | Consistent, searchable listings without letting the model set price | LLM may omit details; rule-based fallback |
+| Task agent | Planner over deterministic skill workflows | Adds autonomy without giving the model direct side effects | Policy and confirmation add complexity |
+| Flash purchase | Simulated, capped, confirmation-gated | Safe demo of a high-risk skill | Not connected to a real platform |
 | Checkout | User confirmation + demo order | Safe to demo | No real payment |
 | Database | SQLite | Zero setup | Limited concurrency |
 | Frontend | Next.js | Strong portfolio signal | Heavier than Vite |

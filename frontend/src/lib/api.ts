@@ -1,4 +1,4 @@
-import type { ChatResponse, Order, Review, SellerProductCreated, SessionDetail, SessionSummary, } from "./types";
+import type { AgentTask, ChatResponse, Order, Review, SellerProductCreated, SessionDetail, SessionSummary, } from "./types";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api";
 export class ApiError extends Error {
     status: number;
@@ -146,6 +146,18 @@ export const api = {
         return request<SellerProductCreated>("/seller/products", {
             method: "POST",
             body: JSON.stringify(payload),
+        });
+    },
+    runAgentTask(goal: string, userId: string) {
+        return request<AgentTask>("/agent/tasks", {
+            method: "POST",
+            body: JSON.stringify({ goal, user_id: userId }),
+        });
+    },
+    confirmAgentTask(taskId: string, userId: string) {
+        return request<AgentTask>(`/agent/tasks/${taskId}/confirm`, {
+            method: "POST",
+            body: JSON.stringify({ user_id: userId }),
         });
     },
     async chatStream(payload: {

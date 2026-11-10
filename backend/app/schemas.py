@@ -152,6 +152,30 @@ class SellerProductCreatedOut(BaseModel):
     degraded: bool = False
 
 
+class AgentRunRequest(BaseModel):
+    goal: str = Field(min_length=5, max_length=1000)
+    user_id: str = Field(default="demo-user", min_length=1, max_length=64)
+
+
+class AgentConfirmRequest(BaseModel):
+    user_id: str = Field(default="demo-user", min_length=1, max_length=64)
+
+
+class AgentTaskOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    user_id: str
+    goal: str
+    status: str
+    risk: str
+    plan: dict[str, Any] = Field(default_factory=dict)
+    results: list[dict[str, Any]] = Field(default_factory=list)
+    draft: dict[str, Any] | None = None
+    created_at: datetime
+    updated_at: datetime
+
+
 class ProductListResponse(BaseModel):
     products: list[ProductOut]
     total: int

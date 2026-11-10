@@ -3,6 +3,8 @@ import re
 from collections.abc import AsyncIterator
 
 from app.agent.state import (
+    AgentPlan,
+    PlanStep,
     RecommendationContext,
     ReviewAnalysis,
     SellerProductDraft,
@@ -202,6 +204,18 @@ def _find_priorities(message: str) -> list[str]:
     return list(dict.fromkeys(priorities))
 
 
+QUANTITY_WORDS = {"一": 1, "两": 2, "二": 2, "三": 3, "四": 4, "五": 5}
+
+
+def _find_quantity(message: str) -> int:
+    match = re.search(r"(\d+|[一两二三四五])\s*(?:瓶|件|个|份|盒)", message)
+    if not match:
+        return 1
+    value = match.group(1)
+    quantity = int(value) if value.isdigit() else QUANTITY_WORDS.get(value, 1)
+    return max(1, min(5, quantity))
+
+
 def _find_exclusions(message: str) -> list[str]:
     keywords: list[str] = []
     for match in re.finditer(EXCLUDE_PATTERN, message):
@@ -310,6 +324,86 @@ class MockProvider:
             pros=pros,
             cons=cons,
             tags=tags,
+        )
+
+    async def plan_tasks(self, goal: str) -> AgentPlan:
+        """Rule-based task planning for offline demos and LLM fallback."""
+        text = goal.strip()
+        quantity = _find_quantity(text)
+        budget = _find_budget(text)
+        category = _find_category(text)
+        brand = next((item for item in KNOWN_BRANDS if item in text), None)
+        price_match = re.search(r"(\d+(?:\.\d+)?)\s*元", text)
+        explicit_price = (
+            float(price_match.group(1)) if price_match else budget
+        )
+
+        recommend_step = PlanStep(
+            skill="recommend",
+            args={},
+            risk="read",
+            requires_confirmation=False,
+        )
+
+        if any(word in text for word in ("卖", "出售", "上架", "挂到", "二手")):
+            return AgentPlan(
+                goal=goal,
+                summary="Structure the listing and prepare it for publishing",
+                steps=[
+                    PlanStep(
+                        skill="sell",
+                        args={
+                            "description": text,
+                            "category": category,
+                            "price": explicit_price,
+                            "brand": brand,
+                        },
+                        risk="write",
+                        requires_confirmation=True,
+                    )
+                ],
+            )
+
+        if any(word in text for word in ("抢购", "秒杀", "抢")):
+            return AgentPlan(
+                goal=goal,
+                summary="Recommend a product first, then prepare the flash purchase",
+                steps=[
+                    recommend_step,
+                    PlanStep(
+                        skill="flash_sale",
+                        args={
+                            "quantity": quantity,
+                            "max_price": budget,
+                        },
+                        risk="high_risk",
+                        requires_confirmation=True,
+                    ),
+                ],
+            )
+
+        if any(word in text for word in ("买", "下单", "订单", "购买")):
+            return AgentPlan(
+                goal=goal,
+                summary="Recommend a product first, then prepare the order",
+                steps=[
+                    recommend_step,
+                    PlanStep(
+                        skill="order",
+                        args={
+                            "quantity": quantity,
+                            "max_price": budget,
+                        },
+                        risk="write",
+                        requires_confirmation=True,
+                    ),
+                ],
+            )
+
+        return AgentPlan(
+            goal=goal,
+            summary="Search and recommend products",
+            steps=[recommend_step],
         )
 
     async def analyze_product_description(

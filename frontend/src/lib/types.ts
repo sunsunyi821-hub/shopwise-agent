@@ -19,6 +19,28 @@ export type SellerProductCreated = {
     product: Product;
     degraded: boolean;
 };
+export type AgentPlanStep = {
+    skill: string;
+    args: Record<string, unknown>;
+    risk: string;
+    requires_confirmation: boolean;
+};
+export type AgentTask = {
+    id: string;
+    user_id: string;
+    goal: string;
+    status: string;
+    risk: string;
+    plan: {
+        goal?: string;
+        summary?: string;
+        steps?: AgentPlanStep[];
+    };
+    results: Array<Record<string, unknown>>;
+    draft: Record<string, unknown> | null;
+    created_at: string;
+    updated_at: string;
+};
 export type ScoredProduct = {
     product: Product;
     score: number;

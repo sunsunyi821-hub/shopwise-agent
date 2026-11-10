@@ -67,6 +67,7 @@ from sqlmodel import Session
 from app.agent.embeddings import create_embedding_provider
 from app.agent.llm import create_provider
 from app.api import (
+    routes_agent,
     routes_chat,
     routes_health,
     routes_orders,
@@ -183,6 +184,7 @@ app.include_router(routes_orders.router, prefix="/api")
 app.include_router(routes_reviews.router, prefix="/api")
 app.include_router(routes_seller.router, prefix="/api")
 app.include_router(routes_sessions.router, prefix="/api")
+app.include_router(routes_agent.router, prefix="/api")
 
 
 @app.get("/")

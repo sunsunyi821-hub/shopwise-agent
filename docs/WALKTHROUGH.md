@@ -175,6 +175,16 @@ The frontend updates the pending message on every event:
 5. The product is saved with `seller_id`, `rating=0`, and `review_count=0`.
 6. The listing is immediately available to buyer search and ranking.
 
+### Station 11: Task agent
+
+1. Click “Task Agent” in the header and enter a high-level goal.
+2. `POST /api/agent/tasks` asks the planner for an `AgentPlan` (skills, args, risk).
+3. `normalize_plan` forces read/write risk, confirmation, quantity limits, and order-after-recommendation.
+4. Read/draft skills execute; `recommend` reuses the shopping workflow.
+5. The first write step becomes a `draft`; the task status is `awaiting_confirmation`.
+6. `POST /api/agent/tasks/{id}/confirm` re-checks price/quantity and executes once.
+7. Order, selling, and flash-purchase skills are all confirmation-gated; flash purchase is simulated.
+
 ---
 
 ## 2. File map
@@ -196,6 +206,9 @@ The frontend updates the pending message on every event:
 | `backend/app/api/routes_chat.py` | Chat and SSE routes |
 | `backend/app/api/routes_reviews.py` | Review routes |
 | `backend/app/api/routes_seller.py` | Seller listing routes |
+| `backend/app/api/routes_agent.py` | Task agent plan/confirm routes |
+| `backend/app/services/agent_policy.py` | Plan validation, risk, caps, and confirmation |
+| `backend/app/services/agent_tasks.py` | Skill execution and confirmed write steps |
 | `frontend/src/app/page.tsx` | Chat state and streaming orchestration |
 | `frontend/src/lib/api.ts` | HTTP client and SSE parser |
 | `frontend/src/lib/history.ts` | Replay stored messages into ChatResponse |
@@ -204,6 +217,7 @@ The frontend updates the pending message on every event:
 | `frontend/src/components/orders-modal.tsx` | Order details and review actions |
 | `frontend/src/components/review-modal.tsx` | Create/edit review form |
 | `frontend/src/components/seller-modal.tsx` | Seller listing form and structured result |
+| `frontend/src/components/agent-console.tsx` | Task plan, results, draft, and confirmation UI |
 
 ---
 

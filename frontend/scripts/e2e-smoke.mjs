@@ -81,4 +81,24 @@ await sellerDialog.getByText("Listing created").waitFor({ timeout: 60000 });
 await page.screenshot({ path: "../docs/assets/seller-success.png" });
 await sellerDialog.getByRole("button", { name: "Done" }).click();
 console.log("seller flow ok");
+await page.locator("header").getByRole("button", { name: "Task Agent" }).click();
+const agentDialog = page.getByRole("dialog");
+await agentDialog
+    .getByText("Plan, choose skills, confirm execution")
+    .waitFor({ timeout: 15000 });
+await agentDialog
+    .getByPlaceholder(/find a body wash for sensitive skin/)
+    .fill("帮我找一款适合敏感肌的沐浴露，100 元以内，合适的话我想买两瓶。");
+await agentDialog.getByRole("button", { name: "Plan and run" }).click();
+await agentDialog
+    .getByText("Awaiting confirmation", { exact: true })
+    .waitFor({ timeout: 120000 });
+await page.screenshot({ path: "../docs/assets/agent-plan.png" });
+await agentDialog.getByRole("button", { name: "Confirm and execute" }).click();
+await agentDialog
+    .getByText("Completed", { exact: true })
+    .waitFor({ timeout: 120000 });
+await page.screenshot({ path: "../docs/assets/agent-success.png" });
+await agentDialog.getByRole("button", { name: "Close" }).click();
+console.log("agent task flow ok");
 await browser.close();

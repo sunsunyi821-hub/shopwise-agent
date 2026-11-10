@@ -28,6 +28,7 @@ ShopWise will:
 6. **Confirm the order** — a demo order is created only after the user clicks confirm.
 7. **Review the purchase** — the buyer can write, view, and edit one review per order; an LLM structures it into sentiment, a summary, pros, cons, and tags for future shoppers.
 8. **Sell a product** — a seller describes an item and sets the price/category; an LLM structures the listing into a product record that enters the buyer catalog immediately.
+9. **Plan a multi-step task** — a top-level agent chooses skills such as recommendation, ordering, selling, and a simulated flash purchase, then stops at a confirmation gate before any write operation.
 
 ### Screenshots
 
@@ -42,6 +43,10 @@ ShopWise will:
 | View and edit a review | Structured review result | Seller listing created |
 |---|---|---|
 | ![Review details](docs/assets/review-detail.png) | ![Review success](docs/assets/review-success.png) | ![Seller listing](docs/assets/seller-success.png) |
+
+| Task agent planning | Task agent completed |
+|---|---|
+| ![Agent plan](docs/assets/agent-plan.png) | ![Agent success](docs/assets/agent-success.png) |
 
 ---
 
@@ -60,6 +65,9 @@ ShopWise will:
 - [x] Post-purchase reviews with LLM structuring
 - [x] Review viewing and editing; one review per order
 - [x] Seller listings: free-text description → LLM-structured product → buyer catalog
+- [x] Top-level task agent: plan, choose skills, and confirm write operations
+- [x] Recommendation, order, selling, and simulated flash-purchase skills
+- [x] Policy gateway with risk levels, confirmation gates, quantity/price caps, and idempotent confirmation
 - [x] Session replay with persisted product score snapshots
 - [ ] Evaluation set, Docker, CI, and public deployment
 
@@ -81,6 +89,12 @@ flowchart LR
     A --> RV["Review analysis<br/>LLM → ReviewAnalysis"]
     A --> SL["Seller listing<br/>LLM → SellerProductDraft"]
     A --> O["Demo checkout"]
+    A --> SV["Task agent<br/>plan → choose skills → confirm"]
+    SV --> G
+    SV --> SL
+    SV --> O
+    SV --> FS["Flash purchase<br/>simulated"]
+    SV --> PG["Policy + confirmation"]
     S --> DB[(SQLite)]
     E --> DB
     O --> DB
@@ -229,6 +243,9 @@ CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 | PUT | `/api/reviews/{id}` | Edit a review |
 | POST | `/api/seller/products` | Create a seller listing |
 | GET | `/api/seller/products` | List a seller's products |
+| POST | `/api/agent/tasks` | Plan and run a task until confirmation |
+| GET | `/api/agent/tasks/{id}` | Get a task and its plan/results |
+| POST | `/api/agent/tasks/{id}/confirm` | Confirm and execute the pending write step |
 
 See `/docs` for the full schema.
 
@@ -317,7 +334,40 @@ Reviews are stored in SQLite and shown on the product detail page. `PUT /api/rev
 
 ---
 
-## 12. Tests
+## 12. Task agent
+
+The task agent is a hierarchical supervisor on top of the deterministic workflows.
+
+```text
+user goal
+  → planner (LLM or rules) produces AgentPlan
+  → policy validates skills, risk, quantities, and price caps
+  → read/draft skills execute
+  → write step becomes a pending draft
+  → user confirms
+  → execution re-checks server-side price/quantity/state
+```
+
+Skills:
+
+| Skill | Risk | Behavior |
+|---|---|---|
+| `recommend` | read | Runs the existing shopping workflow and returns ranked products |
+| `order` | write | Creates a pending order draft; confirmation creates the order |
+| `sell` | write | Structures a listing and waits for confirmation before publishing |
+| `flash_sale` | high risk | Prepares a simulated purchase with price/quantity caps; confirmation creates a demo order |
+
+Safety rules:
+
+- The policy layer owns risk and confirmation; the model cannot mark a write as “no confirmation”.
+- Order and flash-sale plans require a preceding recommendation.
+- Quantity is clamped to 1–5; totals are capped; confirmed execution is idempotent.
+- Flash purchase is simulated and does not connect to a real platform or payment.
+- The LLM outputs plans and drafts, never direct side effects.
+
+---
+
+## 13. Tests
 
 ```bash
 cd backend
@@ -331,7 +381,7 @@ node scripts/e2e-smoke.mjs   # requires both servers
 
 ---
 
-## 13. Project structure
+## 14. Project structure
 
 ```text
 backend/
@@ -358,7 +408,7 @@ docs/
 
 ---
 
-## 14. Notes
+## 15. Notes
 
 - The demo catalog, product names, and example prompts are in Chinese; the UI and codebase are in English.
 - Seller listings start with no ratings or reviews, so they rank as new products until buyers review them.
@@ -368,6 +418,6 @@ docs/
 
 ---
 
-## 15. License
+## 16. License
 
 MIT. Add a `LICENSE` file before publishing if needed.

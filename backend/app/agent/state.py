@@ -150,6 +150,19 @@ class SellerProductDraft(BaseModel):
     tags: list[str] = Field(default_factory=list)
 
 
+class PlanStep(BaseModel):
+    skill: Literal["recommend", "order", "sell", "flash_sale"] = "recommend"
+    args: dict[str, Any] = Field(default_factory=dict)
+    risk: Literal["read", "draft", "write", "high_risk"] = "read"
+    requires_confirmation: bool = False
+
+
+class AgentPlan(BaseModel):
+    goal: str = ""
+    summary: str = ""
+    steps: list[PlanStep] = Field(default_factory=list)
+
+
 class RecommendationContext(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

@@ -78,6 +78,23 @@ class ProductEmbedding(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=utc_now)
 
 
+class AgentTask(SQLModel, table=True):
+    """Supervisor task with plan, results, and a pending confirmation draft."""
+
+    __tablename__ = "agent_tasks"
+
+    id: str = Field(primary_key=True)
+    user_id: str = Field(index=True)
+    goal: str
+    status: str = "planned"
+    risk: str = "read"
+    plan: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    results: list[dict[str, Any]] = Field(default_factory=list, sa_column=Column(JSON))
+    draft: dict[str, Any] | None = Field(default=None, sa_column=Column(JSON))
+    created_at: datetime = Field(default_factory=utc_now)
+    updated_at: datetime = Field(default_factory=utc_now)
+
+
 class ChatSession(SQLModel, table=True):
     __tablename__ = "chat_sessions"
 

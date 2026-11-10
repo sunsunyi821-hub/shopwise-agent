@@ -1,9 +1,10 @@
 "use client";
-import { ArrowRight, Package, Sparkles, Store } from "lucide-react";
+import { ArrowRight, Bot, Package, Sparkles, Store } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChatMessage } from "@/components/chat-message";
 import { Composer } from "@/components/composer";
 import { OrderModal } from "@/components/order-modal";
+import { AgentConsole } from "@/components/agent-console";
 import { OrdersModal } from "@/components/orders-modal";
 import { ProductModal } from "@/components/product-modal";
 import { SellerModal } from "@/components/seller-modal";
@@ -69,6 +70,7 @@ export default function HomePage() {
     const [ordersOpen, setOrdersOpen] = useState(false);
     const [ordersVersion, setOrdersVersion] = useState(0);
     const [sellerOpen, setSellerOpen] = useState(false);
+    const [agentOpen, setAgentOpen] = useState(false);
     const bottomRef = useRef<HTMLDivElement>(null);
     const streamAbortRef = useRef<AbortController | null>(null);
     const refreshSessions = useCallback(async () => {
@@ -304,6 +306,10 @@ export default function HomePage() {
             <span className="hidden rounded-full border border-brand/15 bg-brand-soft/70 px-2.5 py-1 text-[10px] font-medium text-brand-dark sm:inline">
               Simulated checkout
             </span>
+            <button type="button" onClick={() => setAgentOpen(true)} className="flex items-center gap-1 rounded-full border border-ink/15 bg-ink px-2.5 py-1 text-[10px] font-medium text-white transition hover:bg-ink/90">
+              <Bot className="h-3 w-3"/>
+              Task Agent
+            </button>
             <button type="button" onClick={() => setSellerOpen(true)} className="flex items-center gap-1 rounded-full border border-brand/20 bg-brand-soft/70 px-2.5 py-1 text-[10px] font-medium text-brand-dark transition hover:bg-brand-soft">
               <Store className="h-3 w-3"/>
               Sell
@@ -350,6 +356,7 @@ export default function HomePage() {
         }}/>
       <OrdersModal open={ordersOpen} userId={USER_ID} version={ordersVersion} onClose={() => setOrdersOpen(false)}/>
       <SellerModal open={sellerOpen} sellerId="demo-seller" onClose={() => setSellerOpen(false)}/>
+      <AgentConsole open={agentOpen} userId={USER_ID} onClose={() => setAgentOpen(false)}/>
 
       {toast ? (<div className="fixed bottom-24 left-1/2 z-[70] -translate-x-1/2 rounded-full bg-ink px-4 py-2 text-xs font-medium text-white shadow-xl">
           {toast}

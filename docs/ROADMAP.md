@@ -19,6 +19,8 @@ Completed:
 - [x] Post-purchase reviews with LLM structuring
 - [x] Review viewing and editing
 - [x] Seller listings with LLM-structured product data
+- [x] Top-level task agent with recommendation, order, selling, and simulated flash-purchase skills
+- [x] Policy gateway with risk levels, confirmation gates, and idempotent execution
 - [x] Session replay with persisted product snapshots
 - [x] Backend tests and Playwright smoke test
 

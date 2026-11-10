@@ -3,6 +3,7 @@ from collections.abc import AsyncIterator
 from typing import Protocol
 
 from app.agent.state import (
+    AgentPlan,
     RecommendationContext,
     ReviewAnalysis,
     SellerProductDraft,
@@ -28,7 +29,8 @@ class LLMProvider(Protocol):
     1. turn a fuzzy user message into a structured shopping intent;
     2. write a recommendation from already-ranked products;
     3. turn a free-text review into a structured ReviewAnalysis;
-    4. turn a seller description into a structured SellerProductDraft.
+    4. turn a seller description into a structured SellerProductDraft;
+    5. build a structured task plan from a high-level goal.
     """
 
 
@@ -62,6 +64,8 @@ class LLMProvider(Protocol):
         price: float,
         brand: str | None,
     ) -> SellerProductDraft: ...
+
+    async def plan_tasks(self, goal: str) -> AgentPlan: ...
 
     def stream_recommendation(
         self, context: RecommendationContext

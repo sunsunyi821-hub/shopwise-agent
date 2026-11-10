@@ -4,15 +4,18 @@ from anthropic import AsyncAnthropic
 
 from app.agent.prompts import (
     INTENT_SYSTEM,
+    PLANNER_SYSTEM,
     RECOMMENDATION_SYSTEM,
     REVIEW_SYSTEM,
     SELLER_PRODUCT_SYSTEM,
     build_intent_prompt,
+    build_plan_prompt,
     build_recommendation_prompt,
     build_review_prompt,
     build_seller_product_prompt,
 )
 from app.agent.state import (
+    AgentPlan,
     RecommendationContext,
     ReviewAnalysis,
     SellerProductDraft,
@@ -83,6 +86,21 @@ class AnthropicProvider:
         )
         if response.parsed_output is None:
             raise ValueError("Anthropic returned no parsed review analysis")
+        return response.parsed_output
+
+    async def plan_tasks(self, goal: str) -> AgentPlan:
+        response = await self.client.messages.parse(
+            model=self.model,
+            max_tokens=1024,
+            system=PLANNER_SYSTEM,
+            messages=[
+                {"role": "user", "content": build_plan_prompt(goal)}
+            ],
+            output_format=AgentPlan,
+            output_config={"effort": "low"},
+        )
+        if response.parsed_output is None:
+            raise ValueError("Anthropic returned no parsed task plan")
         return response.parsed_output
 
     async def analyze_product_description(
