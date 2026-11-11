@@ -1,4 +1,4 @@
-import type { AgentTask, ChatResponse, Order, Review, SellerProductCreated, SessionDetail, SessionSummary, } from "./types";
+import type { AgentTask, ChatResponse, MCPToolsStatus, Order, Product, Review, SellerProductCreated, SessionDetail, SessionSummary, } from "./types";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api";
 export class ApiError extends Error {
     status: number;
@@ -146,6 +146,17 @@ export const api = {
         return request<SellerProductCreated>("/seller/products", {
             method: "POST",
             body: JSON.stringify(payload),
+        });
+    },
+    sellerProducts(sellerId: string) {
+        return request<Product[]>(`/seller/products?seller_id=${encodeURIComponent(sellerId)}`);
+    },
+    mcpTools() {
+        return request<MCPToolsStatus>("/mcp/tools");
+    },
+    refreshMcpTools() {
+        return request<MCPToolsStatus>("/mcp/tools/refresh", {
+            method: "POST",
         });
     },
     runAgentTask(goal: string, userId: string) {

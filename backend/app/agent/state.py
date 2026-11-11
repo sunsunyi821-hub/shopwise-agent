@@ -151,7 +151,13 @@ class SellerProductDraft(BaseModel):
 
 
 class PlanStep(BaseModel):
-    skill: Literal["recommend", "order", "sell", "flash_sale"] = "recommend"
+    skill: Literal[
+        "recommend",
+        "market_search",
+        "order",
+        "sell",
+        "flash_sale",
+    ] = "recommend"
     args: dict[str, Any] = Field(default_factory=dict)
     risk: Literal["read", "draft", "write", "high_risk"] = "read"
     requires_confirmation: bool = False

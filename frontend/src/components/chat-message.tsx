@@ -1,6 +1,8 @@
 "use client";
 import { AlertTriangle, MessageCircleQuestion, Sparkles } from "lucide-react";
 import { AgentTrace } from "@/components/agent-trace";
+import { ChatTaskCard } from "@/components/chat-task-card";
+import { MarketplaceCard } from "@/components/marketplace-card";
 import { Markdown } from "@/components/markdown";
 import { ProductGrid } from "@/components/product-card";
 import type { ScoredProduct, UiMessage } from "@/lib/types";
@@ -13,9 +15,11 @@ function providerLabel(provider?: string) {
         return "OpenAI-compatible";
     return provider ?? "Agent";
 }
-export function ChatMessage({ message, onProductOpen, }: {
+export function ChatMessage({ message, onProductOpen, onConfirmTask, confirmingTaskId, }: {
     message: UiMessage;
     onProductOpen: (item: ScoredProduct) => void;
+    onConfirmTask: (messageId: string, taskId: string) => void;
+    confirmingTaskId?: string | null;
 }) {
     if (message.role === "user") {
         return (<div className="flex animate-fade-up justify-end">
@@ -42,7 +46,9 @@ export function ChatMessage({ message, onProductOpen, }: {
             </span>) : null}
         </div>
 
-        {response || message.pending ? (<AgentTrace intent={response?.intent} products={response?.products} provider={response?.provider} loading={message.pending} stage={message.stage} stageStatus={message.stageStatus}/>) : null}
+        {!message.marketplace && (response || message.pending) ? (<AgentTrace intent={response?.intent} products={response?.products} provider={response?.provider} loading={message.pending} stage={message.stage} stageStatus={message.stageStatus}/>) : null}
+
+        {message.marketplace ? (<MarketplaceCard result={message.marketplace}/>) : null}
 
         {response?.clarification ? (<div className="flex gap-3 rounded-2xl border border-accent/20 bg-accent-soft/60 p-4">
             <MessageCircleQuestion className="mt-0.5 h-4 w-4 shrink-0 text-accent"/>
@@ -69,6 +75,8 @@ export function ChatMessage({ message, onProductOpen, }: {
             </div>
             <ProductGrid items={response.products} onOpen={onProductOpen}/>
           </div>) : null}
+
+        {message.task ? (<ChatTaskCard task={message.task} confirming={confirmingTaskId === message.task.id} onConfirm={() => onConfirmTask(message.id, message.task!.id)}/>) : null}
 
         {message.pending &&
             !response?.clarification &&

@@ -70,6 +70,7 @@ from app.api import (
     routes_agent,
     routes_chat,
     routes_health,
+    routes_mcp,
     routes_orders,
     routes_products,
     routes_reviews,
@@ -79,6 +80,7 @@ from app.api import (
 
 from app.config import get_settings
 from app.db import engine, init_db
+from app.mcp.client import MCPMarketplaceClient
 
 
 
@@ -159,6 +161,22 @@ async def lifespan(app: FastAPI):
             settings.embedding_provider,
         )
     app.state.embedding_provider = embedding_provider
+
+    mcp_client = MCPMarketplaceClient(settings)
+    app.state.mcp = mcp_client
+    if mcp_client.enabled:
+        try:
+            discovered = await mcp_client.discover_tools()
+            logger.info(
+                "MCP marketplace: %s tools discovered via %s (%s)",
+                len(discovered),
+                mcp_client.transport,
+                ", ".join(tool["name"] for tool in discovered),
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("MCP marketplace unavailable at startup: %s", exc)
+    else:
+        logger.info("MCP marketplace disabled")
     yield
 
 
@@ -185,6 +203,7 @@ app.include_router(routes_reviews.router, prefix="/api")
 app.include_router(routes_seller.router, prefix="/api")
 app.include_router(routes_sessions.router, prefix="/api")
 app.include_router(routes_agent.router, prefix="/api")
+app.include_router(routes_mcp.router, prefix="/api")
 
 
 @app.get("/")

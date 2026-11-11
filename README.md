@@ -1,6 +1,6 @@
 # ShopWise · Explainable Shopping Agent
 
-> A full-stack agent that understands shopping preferences, compares products, explains its recommendation, and places a demo order only after the user confirms.
+> A full-stack agent that plans tasks, discovers external tools through MCP, compares products, explains its recommendation, and places a demo order only after the user confirms.
 
 ![status](https://img.shields.io/badge/status-MVP%20ready-brightgreen)
 ![python](https://img.shields.io/badge/Python-3.13-blue)
@@ -14,21 +14,26 @@ ShopWise is a portfolio project for learning and demonstrating agent application
 
 ## 1. What it does
 
-A user can type:
+A user can type in the bottom chat box:
 
 > 我想买洗发水，预算 100 以内，可以去除头屑
 
+or ask for an external marketplace comparison:
+
+> 帮我找京东和淘宝上 100 元以内的护肤霜，比较价格和评价后推荐三款性价比最高的。
+
 ShopWise will:
 
-1. **Understand the request** — category, budget, skin type, scent, brands, exclusions, priorities.
-2. **Retrieve products** — structured filters plus optional embedding-based semantic retrieval.
+1. **Plan the task** — a supervisor agent chooses recommendation, ordering, selling, flash purchase, or marketplace comparison.
+2. **Retrieve products** — structured filters plus optional embedding-based semantic retrieval; external products come through MCP tool calls.
 3. **Analyze reviews** — ratings, review counts, pros and cons.
 4. **Rank products** — price, rating, reviews, preference match, and semantic relevance, with an explainable score breakdown.
 5. **Write a recommendation** — top-3 table, top pick, reasons, and caveats, streamed token by token.
-6. **Confirm the order** — a demo order is created only after the user clicks confirm.
+6. **Confirm write operations** — order, listing, and flash-purchase drafts wait for explicit user confirmation.
 7. **Review the purchase** — the buyer can write, view, and edit one review per order; an LLM structures it into sentiment, a summary, pros, cons, and tags for future shoppers.
 8. **Sell a product** — a seller describes an item and sets the price/category; an LLM structures the listing into a product record that enters the buyer catalog immediately.
-9. **Plan a multi-step task** — a top-level agent chooses skills such as recommendation, ordering, selling, and a simulated flash purchase, then stops at a confirmation gate before any write operation.
+9. **Show the results** — the Orders and Sell panels reflect what the user bought and listed.
+10. **Use external tools through MCP** — the agent discovers JD/Taobao search tools with `tools/list`, invokes them with `tools/call`, and compares price, rating, and review volume.
 
 ### Screenshots
 
@@ -44,9 +49,13 @@ ShopWise will:
 |---|---|---|
 | ![Review details](docs/assets/review-detail.png) | ![Review success](docs/assets/review-success.png) | ![Seller listing](docs/assets/seller-success.png) |
 
-| Task agent planning | Task agent completed |
+| Chat-agent task plan | Task completed after confirmation |
 |---|---|
 | ![Agent plan](docs/assets/agent-plan.png) | ![Agent success](docs/assets/agent-success.png) |
+
+| MCP cross-marketplace comparison | MCP tool discovery |
+|---|---|
+| ![MCP comparison](docs/assets/mcp-compare.png) | ![MCP tools](docs/assets/mcp-tools.png) |
 
 ---
 
@@ -65,10 +74,15 @@ ShopWise will:
 - [x] Post-purchase reviews with LLM structuring
 - [x] Review viewing and editing; one review per order
 - [x] Seller listings: free-text description → LLM-structured product → buyer catalog
-- [x] Top-level task agent: plan, choose skills, and confirm write operations
+- [x] Two-layer LangGraph agent: supervisor plans, workflow tools execute
+- [x] Chat box as the agent entrypoint for recommend, buy, sell, flash purchase, and comparison
 - [x] Recommendation, order, selling, and simulated flash-purchase skills
 - [x] Policy gateway with risk levels, confirmation gates, quantity/price caps, and idempotent confirmation
-- [x] Session replay with persisted product score snapshots
+- [x] Session replay with persisted product, task, and MCP result snapshots
+- [x] MCP tool discovery with `tools/list` and invocation with `tools/call`
+- [x] Bundled JD/Taobao marketplace MCP server and cross-platform value ranking
+- [x] MCP tool-catalog panel and inline confirmation cards
+- [x] Automated tests, Ruff, production build, and Playwright E2E
 - [ ] Evaluation set, Docker, CI, and public deployment
 
 ---
@@ -76,42 +90,39 @@ ShopWise will:
 ## 3. Architecture
 
 ```mermaid
-flowchart LR
-    U["Next.js Chat UI"] -->|POST /api/chat/stream| A["FastAPI"]
+flowchart TB
+    U["Next.js UI<br/>chat / orders / seller"] -->|POST /api/chat/stream| A["FastAPI"]
+    A --> SUP["Supervisor StateGraph<br/>plan → execute"]
+    SUP --> POL["Policy layer<br/>risk / confirmation / caps"]
+    SUP --> REC["recommend workflow"]
+    SUP --> ORD["order workflow<br/>draft only"]
+    SUP --> SELL["selling workflow<br/>draft only"]
+    SUP --> FS["flash-sale workflow<br/>draft only"]
+    SUP --> MKT["marketplace workflow"]
+    MKT --> MCPC["MCP client<br/>tools/list + tools/call"]
+    MCPC --> MCPS["Marketplace MCP server<br/>stdio subprocess / remote HTTP"]
+    MCPS --> EXT["JD / Taobao demo tools<br/>search_jd_products<br/>search_taobao_products"]
+    A --> TASK[(AgentTask<br/>plan / draft / results)]
+    ORD --> TASK
+    SELL --> TASK
+    FS --> TASK
+    A -->|after confirmation| O["Demo orders / listings"]
     U -->|POST /api/reviews| A
-    U -->|POST /api/seller/products| A
-    A --> G["LangGraph StateGraph<br/>parse → search → rank → recommend<br/>clarify / no_results branches"]
-    G --> P["Intent parsing<br/>LLM / Mock"]
-    G --> S["Product search<br/>SQLite filters"]
-    G --> E["Semantic retrieval<br/>Embedding + cosine"]
-    G --> K["Ranking<br/>price / rating / reviews / preference / semantic"]
-    G --> W["Recommendation<br/>LLM / Mock"]
     A --> RV["Review analysis<br/>LLM → ReviewAnalysis"]
-    A --> SL["Seller listing<br/>LLM → SellerProductDraft"]
-    A --> O["Demo checkout"]
-    A --> SV["Task agent<br/>plan → choose skills → confirm"]
-    SV --> G
-    SV --> SL
-    SV --> O
-    SV --> FS["Flash purchase<br/>simulated"]
-    SV --> PG["Policy + confirmation"]
+    REC --> S["Structured filters + semantic retrieval + ranking"]
     S --> DB[(SQLite)]
-    E --> DB
     O --> DB
     RV --> DB
-    SL --> DB
-    P --> LLM["Anthropic / OpenAI-compatible"]
-    E --> EMB["Qwen / OpenAI-compatible embeddings"]
-    W --> LLM
-    RV --> LLM
-    SL --> LLM
+    S --> LLM["Anthropic / OpenAI-compatible"]
+    MKT --> LLM
 ```
 
 | Layer | Responsibility | Directory |
 |---|---|---|
-| UI | Chat, product cards, agent trace, checkout, order history, reviews, seller listing | `frontend/` |
-| API | Routes, validation, SSE, errors | `backend/app/api/` |
-| Agent | Intent parsing, LangGraph workflow, prompts, provider abstractions | `backend/app/agent/` |
+| UI | Chat agent, task cards, MCP comparison, product cards, checkout, reviews, seller center | `frontend/` |
+| API | Routes, SSE, validation, errors | `backend/app/api/` |
+| Agent | Supervisor planning, workflow tools, policy, prompts, provider abstractions | `backend/app/agent/` |
+| MCP | Standard server, tool discovery, invocation, result normalization | `backend/app/mcp/` |
 | Services | Catalog search, semantic scoring, ranking, reviews, sessions | `backend/app/services/` |
 | Data | SQLModel tables, product embeddings, seed catalog | `backend/app/models.py`, `backend/app/data/` |
 
@@ -125,7 +136,9 @@ flowchart LR
 - FastAPI + Uvicorn
 - Pydantic v2 + SQLModel
 - SQLite (development; PostgreSQL is a production option)
-- LangGraph `StateGraph`
+- LangGraph `StateGraph` (supervisor and recommendation subgraph)
+- LangChain tools for recommendation, order, selling, flash sale, and comparison
+- MCP Python SDK 2.x (`MCPServer` server + `Client`, stdio or Streamable HTTP)
 - Anthropic SDK + OpenAI SDK for OpenAI-compatible providers
 - Qwen or any OpenAI-compatible embedding endpoint
 - SSE via `sse-starlette`
@@ -217,6 +230,14 @@ EMBEDDING_BATCH_SIZE=20
 
 DATABASE_URL=sqlite:///./data/shopwise.db
 CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+
+# MCP external tools
+MCP_ENABLED=true
+# Leave empty to launch the bundled demo server over stdio
+MCP_MARKETPLACE_URL=
+MCP_MARKETPLACE_TIMEOUT_SECONDS=30
+# Tests can use true to avoid a subprocess
+MCP_MARKETPLACE_INPROCESS=false
 ```
 
 `DEEPSEEK_API_KEY` / `DEEPSEEK_BASE_URL` and `DASHSCOPE_API_KEY` are accepted as fallbacks. Never commit `.env`.
@@ -246,6 +267,10 @@ CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 | POST | `/api/agent/tasks` | Plan and run a task until confirmation |
 | GET | `/api/agent/tasks/{id}` | Get a task and its plan/results |
 | POST | `/api/agent/tasks/{id}/confirm` | Confirm and execute the pending write step |
+| GET | `/api/mcp/tools` | MCP discovery result (`tools/list`) |
+| POST | `/api/mcp/tools/refresh` | Re-discover MCP tools |
+
+SSE events from `/api/chat/stream`: `session`, `plan`, `stage`, `intent`, `products`, `token`, `task`, `marketplace`, `recommendation`, `done`.
 
 See `/docs` for the full schema.
 
@@ -253,34 +278,77 @@ See `/docs` for the full schema.
 
 ## 8. Agent workflow
 
+### 8.1 Two layers
+
 ```mermaid
 stateDiagram-v2
-    [*] --> ParseIntent
-    ParseIntent --> Clarify: missing category
-    ParseIntent --> Search: enough information
-    Search --> NoResults: no candidates
-    Search --> Analyze: candidates found
-    Analyze --> Rank
-    Rank --> Recommend
-    Recommend --> [*]
-    Clarify --> [*]
-    NoResults --> [*]
+    [*] --> Plan
+    Plan --> Execute: read next step
+    Execute --> Execute: more steps
+    Execute --> AwaitConfirmation: write draft created
+    Execute --> MarketResult: MCP comparison complete
+    Execute --> FinalRecommendation: recommendation complete
+    AwaitConfirmation --> Execute: user confirms
+    FinalRecommendation --> [*]
+    MarketResult --> [*]
 ```
 
-The graph is compiled once in `backend/app/agent/orchestrator.py`:
+- **Supervisor** — understands the goal, plans steps, chooses workflows, observes results, and ends or replans.
+- **Workflow tools** — recommendation, order, selling, flash sale, and marketplace comparison with deterministic inputs and outputs.
+- **Policy** — forces confirmation for writes, caps quantities/prices/steps, and keeps external search read-only.
 
-- `run_shopping_agent` uses `graph.ainvoke(...)`.
-- `stream_shopping_agent` uses `graph.astream(..., stream_mode="custom")`; nodes push events through `get_stream_writer()`.
+| File | Purpose |
+|---|---|
+| `backend/app/agent/supervisor.py` | LangGraph `plan → execute` state graph |
+| `backend/app/agent/planning.py` | Planning with a rule-based fallback |
+| `backend/app/agent/tools.py` | Workflows and MCP comparison wrapped as LangChain tools |
+| `backend/app/services/agent_policy.py` | Skill allowlist, risk, confirmation, argument normalization |
+| `backend/app/workflows/` | recommend / ordering / selling / flash_sale / marketplace |
+| `backend/app/mcp/` | MCP server, client, and marketplace ranking |
+
+### 8.2 A purchase task
+
+```text
+User: find a body wash for sensitive skin under 100 yuan; if suitable, buy two.
+  ↓
+Supervisor plan: [recommend(read), order(write)]
+  ↓
+Recommendation streams products and reasons
+  ↓
+Order tool creates a draft → SSE task(awaiting_confirmation)
+  ↓
+User clicks "Confirm and run"
+  ↓
+POST /api/agent/tasks/{id}/confirm → idempotent check → demo order
+  ↓
+The Orders panel shows the new order
+```
+
+### 8.3 External marketplace comparison
+
+```text
+User: compare skincare creams under 100 yuan on JD and Taobao; recommend the best three.
+  ↓
+Supervisor plan: [market_search(read)]  ← policy drops any order step
+  ↓
+MCP client → tools/call (tools were discovered at startup)
+  ↓
+search_jd_products + search_taobao_products
+  ↓
+40% price + 35% rating + 25% review volume + intent-match boost
+  ↓
+SSE marketplace → comparison card + tool-call trace
+```
 
 Design principles:
 
 - **Rules before generation** — budgets, categories, and exclusions are enforced by deterministic code; the LLM handles fuzzy language and explanations.
-- **Hybrid retrieval** — structured filters guarantee hard constraints; embeddings add a soft relevance signal.
+- **Decision and execution are separate** — the supervisor can plan and draft, but writes wait for the user.
+- **Standardized external tools** — the agent does not hardcode marketplace APIs; the MCP server owns schemas and execution.
 - **Explainable ranking** — every product exposes a score breakdown and reasons.
-- **Human confirmation** — the agent never places an order automatically.
-- **Graceful degradation** — LLM and embedding failures fall back to rules without breaking the chat.
+- **Graceful degradation** — LLM, embedding, or MCP failures return actionable errors without breaking the rest of the app.
 
-More detail: [docs/LANGGRAPH.md](docs/LANGGRAPH.md).
+More detail: [docs/MCP.md](docs/MCP.md) and [docs/LANGGRAPH.md](docs/LANGGRAPH.md).
 
 ---
 
@@ -334,16 +402,16 @@ Reviews are stored in SQLite and shown on the product detail page. `PUT /api/rev
 
 ---
 
-## 12. Task agent
+## 12. Chat agent
 
-The task agent is a hierarchical supervisor on top of the deterministic workflows.
+The bottom chat box is the agent entrypoint. A hierarchical supervisor sits on top of the deterministic workflows:
 
 ```text
 user goal
   → planner (LLM or rules) produces AgentPlan
   → policy validates skills, risk, quantities, and price caps
   → read/draft skills execute
-  → write step becomes a pending draft
+  → write step becomes a pending draft in the chat
   → user confirms
   → execution re-checks server-side price/quantity/state
 ```
@@ -352,7 +420,8 @@ Skills:
 
 | Skill | Risk | Behavior |
 |---|---|---|
-| `recommend` | read | Runs the existing shopping workflow and returns ranked products |
+| `recommend` | read | Runs the shopping workflow and returns ranked local products |
+| `market_search` | read | Searches external marketplaces through MCP and ranks by value |
 | `order` | write | Creates a pending order draft; confirmation creates the order |
 | `sell` | write | Structures a listing and waits for confirmation before publishing |
 | `flash_sale` | high risk | Prepares a simulated purchase with price/quantity caps; confirmation creates a demo order |
@@ -361,9 +430,12 @@ Safety rules:
 
 - The policy layer owns risk and confirmation; the model cannot mark a write as “no confirmation”.
 - Order and flash-sale plans require a preceding recommendation.
+- A plan containing `market_search` becomes search-only; later write steps are dropped because external products cannot be ordered locally.
 - Quantity is clamped to 1–5; totals are capped; confirmed execution is idempotent.
 - Flash purchase is simulated and does not connect to a real platform or payment.
 - The LLM outputs plans and drafts, never direct side effects.
+
+See [docs/MCP.md](docs/MCP.md) for the MCP server, tool discovery, and real-platform integration path.
 
 ---
 
@@ -372,11 +444,12 @@ Safety rules:
 ```bash
 cd backend
 pytest -q
+pytest -q tests/test_mcp.py   # MCP discovery, comparison, policy boundaries
 ruff check app tests
 
 cd ../frontend
 npm run build
-node scripts/e2e-smoke.mjs   # requires both servers
+node scripts/e2e-smoke.mjs   # requires both servers; includes the MCP flow
 ```
 
 ---
@@ -392,9 +465,11 @@ backend/
     models.py            # SQLModel tables
     schemas.py           # API request/response models
     seed.py              # demo catalog seeding
-    api/                 # health, products, chat, orders, reviews, sessions
-    agent/               # LangGraph workflow, prompts, providers
-    services/            # catalog, ranking, semantic, reviews, sessions
+    api/                 # health, products, chat, orders, reviews, sessions, MCP
+    agent/               # supervisor, workflow tools, prompts, providers
+    mcp/                 # MCP server, client, marketplace ranking
+    workflows/           # recommend, order, selling, flash sale, marketplace
+    services/            # catalog, ranking, semantic, reviews, sessions, policy
     data/products.json   # Chinese demo catalog
   tests/
 frontend/
@@ -414,7 +489,9 @@ docs/
 - Seller listings start with no ratings or reviews, so they rank as new products until buyers review them.
 - Orders are simulated: no payment, inventory, or shipping.
 - Product data is fictional and intended for demonstration only.
-- No real e-commerce site is scraped. Use official APIs and respect platform terms if you connect real data.
+- No real e-commerce site is scraped. The bundled MCP server uses fixed demo listings.
+- External marketplace products are comparison-only; they cannot be ordered inside ShopWise.
+- To connect a real platform, point `MCP_MARKETPLACE_URL` at its official MCP server and respect platform terms, quotas, and authentication requirements.
 
 ---
 

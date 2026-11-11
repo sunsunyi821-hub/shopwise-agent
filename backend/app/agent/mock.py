@@ -15,7 +15,7 @@ from app.agent.state import (
 CATEGORY_SYNONYMS: dict[str, list[str]] = {
     "沐浴露": ["沐浴露", "沐浴乳", "沐浴液", "洗澡"],
     "洗发水": ["洗发水", "洗发露", "洗发液", "洗头"],
-    "面霜": ["面霜", "面乳", "保湿霜", "修护霜"],
+    "面霜": ["面霜", "面乳", "保湿霜", "修护霜", "护肤霜"],
     "防晒霜": ["防晒霜", "防晒乳", "防晒"],
     "牙膏": ["牙膏", "刷牙"],
     "洗衣液": ["洗衣液", "洗衣服", "洗衣"],
@@ -39,6 +39,9 @@ SCENTS = {
     "没有香味": "无香",
     "不含香精": "无香",
     "无香味": "无香",
+    "有香气": "香气",
+    "香气": "香气",
+    "有香味": "香气",
     "花香": "花香",
     "柑橘": "柑橘",
     "木质": "木质",
@@ -216,6 +219,39 @@ def _find_quantity(message: str) -> int:
     return max(1, min(5, quantity))
 
 
+def _find_result_limit(message: str) -> int:
+    match = re.search(r"(\d+|[一两二三四五])\s*款", message)
+    if not match:
+        return 3
+    value = match.group(1)
+    limit = int(value) if value.isdigit() else QUANTITY_WORDS.get(value, 3)
+    return max(1, min(5, limit))
+
+
+def _find_platforms(message: str) -> list[str]:
+    lowered = message.lower()
+    platforms: list[str] = []
+    if "jd" in lowered or "京东" in message:
+        platforms.append("jd")
+    if "taobao" in lowered or "淘宝" in message or "天猫" in message:
+        platforms.append("taobao")
+    return platforms
+
+
+def _market_query(message: str, category: str | None) -> str:
+    parts: list[str] = []
+    if category:
+        parts.append(category)
+    parts.extend(str(value) for value in _find_attributes(message).values())
+    if "去头皮屑" in message or "头皮屑" in message:
+        parts.append("去屑")
+    if "香气" in message or "有香味" in message or "香味" in message:
+        parts.append("香气")
+    if "性价比" in message:
+        parts.append("性价比")
+    return " ".join(dict.fromkeys(part for part in parts if part)) or message
+
+
 def _find_exclusions(message: str) -> list[str]:
     keywords: list[str] = []
     for match in re.finditer(EXCLUDE_PATTERN, message):
@@ -332,6 +368,7 @@ class MockProvider:
         quantity = _find_quantity(text)
         budget = _find_budget(text)
         category = _find_category(text)
+        platforms = _find_platforms(text)
         brand = next((item for item in KNOWN_BRANDS if item in text), None)
         price_match = re.search(r"(\d+(?:\.\d+)?)\s*元", text)
         explicit_price = (
@@ -360,6 +397,26 @@ class MockProvider:
                         },
                         risk="write",
                         requires_confirmation=True,
+                    )
+                ],
+            )
+
+        if platforms:
+            return AgentPlan(
+                goal=goal,
+                summary="Search external marketplaces through MCP and compare price and reviews",
+                steps=[
+                    PlanStep(
+                        skill="market_search",
+                        args={
+                            "platforms": platforms,
+                            "query": _market_query(text, category),
+                            "category": category,
+                            "budget_max": budget,
+                            "limit": _find_result_limit(text),
+                        },
+                        risk="read",
+                        requires_confirmation=False,
                     )
                 ],
             )

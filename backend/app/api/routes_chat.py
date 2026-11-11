@@ -10,9 +10,9 @@ from app.agent.llm import LLMProvider
 from app.agent.orchestrator import (
     AgentResult,
     run_shopping_agent,
-    stream_shopping_agent,
 )
 from app.agent.state import ShoppingProfile
+from app.agent.supervisor import stream_supervisor_agent
 from app.db import engine, get_session
 from app.schemas import (
     ChatRequest,
@@ -177,16 +177,34 @@ async def chat_stream(
                 )
 
                 result: AgentResult | None = None
-                async for event in stream_shopping_agent(
+                task_data: dict | None = None
+                market_data: dict | None = None
+                async for event in stream_supervisor_agent(
                     session=db,
                     provider=provider,
                     message=payload.message,
                     profile=profile,
+                    user_id=payload.user_id,
                     embedding_provider=embedding_provider,
+                    mcp_client=getattr(request.app.state, "mcp", None),
                 ):
                     if event.event == "_final":
-
                         result = event.data["result"]
+                        continue
+
+                    if event.event == "_market_final":
+                        market_data = event.data["result"]
+                        continue
+
+                    if event.event == "task":
+                        task_data = event.data["task"]
+
+                    if event.event == "marketplace":
+                        market_data = event.data
+                        yield _sse(
+                            "marketplace",
+                            {**event.data, "provider": provider_name},
+                        )
                         continue
 
                     if event.event == "products":
@@ -203,6 +221,92 @@ async def chat_stream(
                         continue
 
                     yield _sse(event.event, event.data)
+
+                if task_data is not None:
+                    summary = (
+                        (task_data.get("plan") or {}).get("summary")
+                        or "The task is ready and waiting for your confirmation."
+                    )
+                    recommend_result = next(
+                        (
+                            item
+                            for item in task_data.get("results", [])
+                            if item.get("skill") == "recommend"
+                        ),
+                        None,
+                    )
+                    meta = {
+                        "provider": provider_name,
+                        "task_id": task_data.get("id"),
+                        "task": task_data,
+                        "status": task_data.get("status"),
+                    }
+                    if recommend_result:
+                        meta.update(
+                            {
+                                "products": recommend_result.get("products", []),
+                                "top_product_id": recommend_result.get(
+                                    "top_product_id"
+                                ),
+                                "recommendation": recommend_result.get(
+                                    "summary", ""
+                                ),
+                                "relaxations": recommend_result.get(
+                                    "relaxations", []
+                                ),
+                            }
+                        )
+                    assistant_message = add_message(
+                        db,
+                        session_id=chat_session.id,
+                        role="assistant",
+                        content=summary,
+                        meta=meta,
+                    )
+                    touch_session(
+                        db,
+                        chat_session,
+                        profile=profile.model_dump(exclude_none=True),
+                        title=payload.message,
+                    )
+                    yield _sse(
+                        "done",
+                        {
+                            "session_id": chat_session.id,
+                            "message_id": assistant_message.id,
+                        },
+                    )
+                    return
+
+                if market_data is not None:
+                    assistant_message = add_message(
+                        db,
+                        session_id=chat_session.id,
+                        role="assistant",
+                        content=str(market_data.get("recommendation", "")),
+                        meta={
+                            "provider": provider_name,
+                            "marketplace": market_data,
+                            "mcp": {
+                                "tool_calls": market_data.get("tool_calls", []),
+                                "platforms": market_data.get("platforms", []),
+                            },
+                        },
+                    )
+                    touch_session(
+                        db,
+                        chat_session,
+                        profile=profile.model_dump(exclude_none=True),
+                        title=payload.message,
+                    )
+                    yield _sse(
+                        "done",
+                        {
+                            "session_id": chat_session.id,
+                            "message_id": assistant_message.id,
+                        },
+                    )
+                    return
 
                 if result is None:
                     raise RuntimeError("Agent stream finished without a result")

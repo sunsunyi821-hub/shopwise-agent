@@ -1,19 +1,21 @@
-import type { ChatMessage, ChatResponse, PurchaseProposal, ScoredProduct, ShoppingIntent, } from "./types";
+import type { ChatMessage, ChatResponse, MarketplaceResult, PurchaseProposal, ScoredProduct, ShoppingIntent, } from "./types";
 type StoredMeta = {
     provider?: string;
     intent?: ShoppingIntent | null;
     products?: ScoredProduct[];
     top_product_id?: string | null;
     purchase_proposal?: PurchaseProposal | null;
+    recommendation?: string | null;
     clarification?: string | null;
     degraded?: boolean;
+    marketplace?: MarketplaceResult;
 };
 export function buildHistoryResponse(message: ChatMessage, sessionId: string): ChatResponse | undefined {
     if (message.role !== "assistant")
         return undefined;
     const meta = (message.meta ?? {}) as StoredMeta;
     const products = Array.isArray(meta.products) ? meta.products : [];
-    if (!meta.intent && products.length === 0)
+    if (!meta.intent && products.length === 0 && !meta.marketplace)
         return undefined;
     const top = products.find((item) => item.product.id === meta.top_product_id)?.product ??
         products[0]?.product;
@@ -34,7 +36,9 @@ export function buildHistoryResponse(message: ChatMessage, sessionId: string): C
         provider: meta.provider ?? "unknown",
         intent: meta.intent ?? null,
         products,
-        recommendation: clarification ? "" : message.content,
+        recommendation: clarification
+            ? ""
+            : meta.recommendation || message.content,
         top_product_id: meta.top_product_id ?? top?.id ?? null,
         purchase_proposal: proposal,
         clarification,

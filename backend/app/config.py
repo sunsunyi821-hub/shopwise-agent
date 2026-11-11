@@ -42,8 +42,14 @@ class Settings(BaseSettings):
 
     database_url: str = "sqlite:///./data/shopwise.db"
 
-
-
+    # MCP: standard tool discovery and invocation for external marketplaces.
+    # The bundled demo server runs as a stdio subprocess by default.
+    # Point mcp_marketplace_url at a remote MCP server to replace it.
+    mcp_enabled: bool = True
+    mcp_marketplace_url: str | None = None
+    mcp_marketplace_command: str | None = None
+    mcp_marketplace_timeout_seconds: float = 30.0
+    mcp_marketplace_inprocess: bool = False
 
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
 

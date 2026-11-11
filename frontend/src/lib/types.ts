@@ -48,6 +48,60 @@ export type ScoredProduct = {
     reasons: string[];
     warnings: string[];
 };
+export type MarketplaceProduct = {
+    id: string;
+    platform: "jd" | "taobao" | string;
+    platform_label: string;
+    name: string;
+    brand: string;
+    category: string;
+    price: number;
+    original_price: number | null;
+    rating: number;
+    review_count: number;
+    sales: number;
+    description: string;
+    tags: string[];
+    pros: string[];
+    cons: string[];
+    image_key: string;
+    url: string;
+    value_score: number;
+    reasons: string[];
+};
+export type MCPToolCall = {
+    name: string;
+    arguments: Record<string, unknown>;
+    ok: boolean;
+    duration_ms?: number;
+    error?: string | null;
+};
+export type MarketplaceResult = {
+    query: string;
+    platforms: string[];
+    budget_max: number | null;
+    products: MarketplaceProduct[];
+    recommendation: string;
+    tool_calls: MCPToolCall[];
+    note: string;
+};
+export type MCPToolInfo = {
+    name: string;
+    description: string;
+    input_schema: {
+        properties?: Record<string, unknown>;
+        required?: string[];
+        [key: string]: unknown;
+    };
+};
+export type MCPToolsStatus = {
+    enabled: boolean;
+    available: boolean;
+    transport?: string;
+    server?: string;
+    tools: MCPToolInfo[];
+    error?: string | null;
+};
 export type ShoppingIntent = {
     category: string | null;
     query: string | null;
@@ -138,4 +192,7 @@ export type UiMessage = {
     pending?: boolean;
     stage?: StreamStage;
     stageStatus?: StreamStageStatus;
+    plan?: AgentTask["plan"];
+    task?: AgentTask;
+    marketplace?: MarketplaceResult;
 };

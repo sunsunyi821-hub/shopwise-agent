@@ -2,6 +2,12 @@
 
 > Design goals: understand fuzzy requests, enforce hard constraints, explain every recommendation, and require user confirmation before any order.
 
+> **v0.2:** the chat entrypoint now uses a two-layer LangGraph design. A supervisor
+> plans and selects workflows; recommendation, ordering, selling, flash sale, and
+> marketplace comparison execute as tools. Write operations gate on user confirmation,
+> and external tools are discovered through MCP. See [README](../README.md) and
+> [MCP.md](MCP.md). The recommendation data flow below still applies as a subgraph.
+
 ---
 
 ## 1. Design goals

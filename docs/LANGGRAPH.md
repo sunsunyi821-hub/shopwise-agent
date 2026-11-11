@@ -2,6 +2,11 @@
 
 > How the `StateGraph` in `backend/app/agent/orchestrator.py` works: state, nodes, conditional edges, and custom streaming.
 
+> **v0.2:** this document explains the recommendation subgraph. The chat entrypoint now
+> first enters the supervisor graph in `backend/app/agent/supervisor.py`, which plans and
+> invokes recommendation, order, selling, flash sale, and MCP comparison as tools. See
+> [README](../README.md) and [MCP.md](MCP.md) for the two-layer design.
+
 ---
 
 ## 1. Why LangGraph

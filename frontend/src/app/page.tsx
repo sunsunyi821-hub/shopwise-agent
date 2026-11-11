@@ -1,24 +1,39 @@
 "use client";
-import { ArrowRight, Bot, Package, Sparkles, Store } from "lucide-react";
+import { ArrowRight, Package, PlugZap, Sparkles, Store } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChatMessage } from "@/components/chat-message";
 import { Composer } from "@/components/composer";
+import { McpToolsModal } from "@/components/mcp-tools-modal";
 import { OrderModal } from "@/components/order-modal";
-import { AgentConsole } from "@/components/agent-console";
 import { OrdersModal } from "@/components/orders-modal";
 import { ProductModal } from "@/components/product-modal";
 import { SellerModal } from "@/components/seller-modal";
 import { Sidebar } from "@/components/sidebar";
 import { api } from "@/lib/api";
 import { buildHistoryResponse } from "@/lib/history";
-import type { ChatResponse, PurchaseProposal, ScoredProduct, SessionSummary, ShoppingIntent, StreamStage, UiMessage, } from "@/lib/types";
+import type { AgentTask, ChatResponse, MarketplaceResult, PurchaseProposal, ScoredProduct, SessionSummary, ShoppingIntent, StreamStage, UiMessage, } from "@/lib/types";
 const USER_ID = "demo-user";
 const DEMO_PROMPTS = [
-    "我想买洗发水，预算 100 以内，可以去除头屑",
+    "我想买一瓶沐浴露，预算 100 以内，敏感肌，最好没有香味",
     "油头，想要控油蓬松的洗发水，评分 4.5 以上",
     "给敏感肌找一款 150 元以内的修护面霜",
-    "想买防晒，SPF50，清爽不油腻，预算 120",
+    "帮我比价京东和淘宝 100 元以内的护肤霜，推荐三款性价比最高的",
 ];
+function taskResultText(task: AgentTask): string {
+    const last = task.results[task.results.length - 1] as Record<string, unknown> | undefined;
+    if (!last)
+        return task.plan.summary || "Task completed";
+    const order = last.order as Record<string, unknown> | undefined;
+    if (order) {
+        return `Order ${String(order.id)} created: ${String(order.product_name)} × ${String(order.quantity)}`;
+    }
+    const product = last.product as Record<string, unknown> | undefined;
+    if (product)
+        return `Listing published: ${String(product.name)}`;
+    return typeof last.summary === "string"
+        ? last.summary
+        : task.plan.summary || "Task completed";
+}
 function Hero({ onPrompt }: {
     onPrompt: (text: string) => void;
 }) {
@@ -34,8 +49,9 @@ function Hero({ onPrompt }: {
         what to buy
       </h1>
       <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink-soft">
-        Tell ShopWise the category, budget, skin type, or what matters most.
-        It parses the request, searches the catalog, summarizes reviews, ranks products, and explains the recommendation. Checkout only happens after you confirm.
+        Tell ShopWise the category, budget, skin type, or what matters most. It plans the task, searches products, summarizes reviews,
+        and ranks them across multiple signals. Checkout happens only after you confirm. You can also ask it to compare JD and Taobao through MCP,
+        bringing external prices and reviews into one view.
       </p>
 
       <div className="mt-7 grid gap-2 sm:grid-cols-2">
@@ -69,8 +85,10 @@ export default function HomePage() {
     const [toast, setToast] = useState<string | null>(null);
     const [ordersOpen, setOrdersOpen] = useState(false);
     const [ordersVersion, setOrdersVersion] = useState(0);
+    const [sellerVersion, setSellerVersion] = useState(0);
     const [sellerOpen, setSellerOpen] = useState(false);
-    const [agentOpen, setAgentOpen] = useState(false);
+    const [mcpOpen, setMcpOpen] = useState(false);
+    const [confirmingTaskId, setConfirmingTaskId] = useState<string | null>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
     const streamAbortRef = useRef<AbortController | null>(null);
     const refreshSessions = useCallback(async () => {
@@ -145,6 +163,39 @@ export default function HomePage() {
                     }
                     patchPending((message) => ({
                         ...message,
+                        response: { ...partial },
+                    }));
+                    return;
+                }
+                if (event === "plan") {
+                    const plan = data.plan as AgentTask["plan"] | undefined;
+                    if (plan) {
+                        patchPending((message) => ({ ...message, plan }));
+                    }
+                    return;
+                }
+                if (event === "task") {
+                    const task = data.task as AgentTask | undefined;
+                    if (task) {
+                        patchPending((message) => ({
+                            ...message,
+                            task,
+                            content: task.plan.summary || message.content,
+                        }));
+                    }
+                    return;
+                }
+                if (event === "marketplace") {
+                    const marketplace = data as unknown as MarketplaceResult;
+                    partial.provider =
+                        typeof data.provider === "string"
+                            ? data.provider
+                            : partial.provider;
+                    partial.recommendation = marketplace.recommendation;
+                    patchPending((message) => ({
+                        ...message,
+                        marketplace,
+                        content: marketplace.recommendation,
                         response: { ...partial },
                     }));
                     return;
@@ -241,7 +292,7 @@ export default function HomePage() {
                 stageStatus: "done",
                 content: item.response?.recommendation ||
                     item.response?.clarification ||
-                    "Sorry, the request did not succeed. Make sure the backend is running at localhost:8000 and try again.",
+                    "Sorry, the request did not complete. Make sure the backend is running at localhost:8000 and try again.",
             }));
         }
         finally {
@@ -252,6 +303,31 @@ export default function HomePage() {
             patchPending((message) => message.pending
                 ? { ...message, pending: false, stage: "done", stageStatus: "done" }
                 : message);
+        }
+    }
+    async function confirmTask(messageId: string, taskId: string) {
+        setConfirmingTaskId(taskId);
+        setError(null);
+        try {
+            const task = await api.confirmAgentTask(taskId, USER_ID);
+            setMessages((current) => current.map((message) => message.id === messageId
+                ? { ...message, task, content: taskResultText(task) }
+                : message));
+            if (task.status === "completed") {
+                setToast("Task completed");
+                setOrdersVersion((value) => value + 1);
+                setSellerVersion((value) => value + 1);
+            }
+            else {
+                const last = task.results[task.results.length - 1] as Record<string, unknown> | undefined;
+                setError(typeof last?.message === "string" ? last.message : "Task failed");
+            }
+        }
+        catch (err) {
+            setError(err instanceof Error ? err.message : "Task failed");
+        }
+        finally {
+            setConfirmingTaskId(null);
         }
     }
     async function loadSession(id: string) {
@@ -267,6 +343,12 @@ export default function HomePage() {
                 role: message.role,
                 content: message.content,
                 response: buildHistoryResponse(message, detail.id),
+                task: message.meta?.task
+                    ? (message.meta.task as AgentTask)
+                    : undefined,
+                marketplace: message.meta?.marketplace
+                    ? (message.meta.marketplace as MarketplaceResult)
+                    : undefined,
             })));
         }
         catch (err) {
@@ -297,7 +379,7 @@ export default function HomePage() {
             <span className="font-display text-base font-semibold">ShopWise</span>
           </div>
           <p className="hidden text-xs text-muted md:block">
-            Shopping decisions · From request to checkout
+            Shopping decisions · Full agent flow from request to checkout
           </p>
           <div className="flex items-center gap-2">
             <span className="rounded-full border border-line bg-card px-2.5 py-1 text-[10px] font-medium text-muted">
@@ -306,9 +388,9 @@ export default function HomePage() {
             <span className="hidden rounded-full border border-brand/15 bg-brand-soft/70 px-2.5 py-1 text-[10px] font-medium text-brand-dark sm:inline">
               Simulated checkout
             </span>
-            <button type="button" onClick={() => setAgentOpen(true)} className="flex items-center gap-1 rounded-full border border-ink/15 bg-ink px-2.5 py-1 text-[10px] font-medium text-white transition hover:bg-ink/90">
-              <Bot className="h-3 w-3"/>
-              Task Agent
+            <button type="button" onClick={() => setMcpOpen(true)} className="flex items-center gap-1 rounded-full border border-line bg-card px-2.5 py-1 text-[10px] font-medium text-ink-soft transition hover:border-brand/30 hover:text-brand">
+              <PlugZap className="h-3 w-3"/>
+              MCP
             </button>
             <button type="button" onClick={() => setSellerOpen(true)} className="flex items-center gap-1 rounded-full border border-brand/20 bg-brand-soft/70 px-2.5 py-1 text-[10px] font-medium text-brand-dark transition hover:bg-brand-soft">
               <Store className="h-3 w-3"/>
@@ -327,7 +409,7 @@ export default function HomePage() {
         <div className="flex-1 overflow-y-auto scrollbar-thin">
           <div className="mx-auto w-full max-w-4xl px-4 py-6 md:px-8">
             {messages.length === 0 ? (<Hero onPrompt={sendMessage}/>) : (<div className="space-y-7 pb-4">
-                {messages.map((message) => (<ChatMessage key={message.id} message={message} onProductOpen={setSelected}/>))}
+                {messages.map((message) => (<ChatMessage key={message.id} message={message} onProductOpen={setSelected} onConfirmTask={confirmTask} confirmingTaskId={confirmingTaskId}/>))}
               </div>)}
             <div ref={bottomRef}/>
           </div>
@@ -340,7 +422,7 @@ export default function HomePage() {
               </p>) : null}
             <Composer value={input} onChange={setInput} onSend={() => void sendMessage(input)} disabled={loading}/>
             <p className="mt-2 text-center text-[10px] text-muted">
-              Demo data only · Simulated checkout, no real payment
+              Demo data only, not purchase advice · Checkout is simulated; no real payment
             </p>
           </div>
         </div>
@@ -355,9 +437,8 @@ export default function HomePage() {
             setOrdersVersion((value) => value + 1);
         }}/>
       <OrdersModal open={ordersOpen} userId={USER_ID} version={ordersVersion} onClose={() => setOrdersOpen(false)}/>
-      <SellerModal open={sellerOpen} sellerId="demo-seller" onClose={() => setSellerOpen(false)}/>
-      <AgentConsole open={agentOpen} userId={USER_ID} onClose={() => setAgentOpen(false)}/>
-
+      <SellerModal open={sellerOpen} sellerId={USER_ID} version={sellerVersion} onClose={() => setSellerOpen(false)}/>
+      <McpToolsModal open={mcpOpen} onClose={() => setMcpOpen(false)}/>
       {toast ? (<div className="fixed bottom-24 left-1/2 z-[70] -translate-x-1/2 rounded-full bg-ink px-4 py-2 text-xs font-medium text-white shadow-xl">
           {toast}
         </div>) : null}
