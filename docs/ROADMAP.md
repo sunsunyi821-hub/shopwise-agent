@@ -19,9 +19,10 @@ Completed:
 - [x] Post-purchase reviews with LLM structuring
 - [x] Review viewing and editing
 - [x] Seller listings with LLM-structured product data
-- [x] Top-level task agent with recommendation, order, selling, and simulated flash-purchase skills
+- [x] Chat-integrated supervisor with recommendation, order, selling, and simulated flash-purchase skills
 - [x] Policy gateway with risk levels, confirmation gates, and idempotent execution
-- [x] Session replay with persisted product snapshots
+- [x] MCP marketplace server/client with tool discovery and cross-platform value ranking
+- [x] Session replay with persisted product, task, and MCP snapshots
 - [x] Backend tests and Playwright smoke test
 
 Next:

@@ -175,15 +175,25 @@ The frontend updates the pending message on every event:
 5. The product is saved with `seller_id`, `rating=0`, and `review_count=0`.
 6. The listing is immediately available to buyer search and ranking.
 
-### Station 11: Task agent
+### Station 11: Chat agent
 
-1. Click “Task Agent” in the header and enter a high-level goal.
-2. `POST /api/agent/tasks` asks the planner for an `AgentPlan` (skills, args, risk).
+1. Type a high-level goal directly into the bottom chat composer.
+2. `/api/chat/stream` asks the supervisor for an `AgentPlan` (skills, args, risk).
 3. `normalize_plan` forces read/write risk, confirmation, quantity limits, and order-after-recommendation.
-4. Read/draft skills execute; `recommend` reuses the shopping workflow.
-5. The first write step becomes a `draft`; the task status is `awaiting_confirmation`.
-6. `POST /api/agent/tasks/{id}/confirm` re-checks price/quantity and executes once.
-7. Order, selling, and flash-purchase skills are all confirmation-gated; flash purchase is simulated.
+4. Read/draft skills execute as tools; `recommend` reuses the shopping workflow.
+5. The first write step becomes a task card in the conversation with status `awaiting_confirmation`.
+6. Clicking “Confirm and run” calls `POST /api/agent/tasks/{id}/confirm`, which re-checks price/quantity and executes once.
+7. Order, selling, and flash-purchase skills are confirmation-gated; flash purchase is simulated.
+
+### Station 12: MCP marketplace comparison
+
+1. At startup, `MCPMarketplaceClient` launches the bundled MCP server and runs `tools/list`.
+2. A goal mentioning JD/Taobao is planned as `market_search`.
+3. The workflow calls discovered tools with `tools/call` and receives structured products.
+4. Price, rating, review volume, and explicit-need matches produce a value score.
+5. SSE sends a `marketplace` event; the UI renders the comparison card and tool-call trace.
+6. External products are read-only: policy drops any order step from the same plan.
+7. `GET /api/mcp/tools` exposes the discovered tool catalog to the UI panel.
 
 ---
 
@@ -195,7 +205,11 @@ The frontend updates the pending message on every event:
 | `backend/app/models.py` | Product, Review, session, message, order tables |
 | `backend/app/seed.py` | Why seed data is JSON and reproducible |
 | `backend/app/agent/state.py` | Profile, intent, scored product, review analysis, seller draft |
-| `backend/app/agent/orchestrator.py` | LangGraph graph, nodes, run/stream entry points |
+| `backend/app/agent/orchestrator.py` | Recommendation subgraph, nodes, run/stream entry points |
+| `backend/app/agent/supervisor.py` | Supervisor graph and task confirmation gate |
+| `backend/app/agent/tools.py` | Workflows and MCP search wrapped as agent tools |
+| `backend/app/mcp/client.py` | MCP tool discovery and invocation |
+| `backend/app/mcp/service.py` | Cross-platform value ranking |
 | `backend/app/agent/mock.py` | Rule-based parser and recommendation |
 | `backend/app/agent/openai_provider.py` | OpenAI-compatible chat and review analysis |
 | `backend/app/services/ranking.py` | Ranking formula and explainability |
